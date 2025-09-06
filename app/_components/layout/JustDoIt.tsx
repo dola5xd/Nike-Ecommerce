@@ -35,10 +35,23 @@ function JustDoIt() {
       onLeaveBack: () => videoRef.current?.pause(),
     });
 
-    videoRef.current.addEventListener("ended", () => {
+    // === Smooth looping video ===
+    const handleEnded = () => {
+      // Fade out video + fade bg
       gsap.to(videoRef.current, { opacity: 0, duration: 1 });
-      gsap.to(containerRef.current, { backgroundColor: "black", duration: 1 });
-    });
+      gsap.to(containerRef, { backgroundColor: "black", duration: 1 });
+
+      // Restart video after fade-out
+      gsap.delayedCall(1, () => {
+        videoRef.current!.currentTime = 0;
+        videoRef.current!.play();
+
+        // Fade back in video + reset bg
+        gsap.to(videoRef.current, { opacity: 1, duration: 1 });
+        gsap.to(containerRef, { backgroundColor: "transparent", duration: 1 });
+      });
+    };
+    videoRef.current.addEventListener("ended", handleEnded);
 
     // === Main container animation (padding + borderRadius) ===
     const containerTl = gsap.timeline({
@@ -130,7 +143,7 @@ function JustDoIt() {
     <section ref={sectionRef} className="w-screen p-10 h-dvh">
       <div
         ref={containerRef}
-        className="relative flex flex-col items-center justify-center w-full h-full overflow-hidden text-light-100 rounded-3xl gap-y-10"
+        className="relative flex flex-col items-center justify-center w-full h-full overflow-hidden text-light-100 rounded-3xl gap-y-10 bg-dark-900"
       >
         {/* Video Background */}
         <video

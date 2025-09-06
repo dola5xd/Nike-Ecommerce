@@ -39,7 +39,6 @@ function DiscoverMore() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top center",
-        end: "bottom bottom",
         toggleActions: "play none pause reverse",
       },
     });
@@ -63,15 +62,14 @@ function DiscoverMore() {
           ease: "power2.inOut",
         }
       )
+      // shoe drop + text start together
+      .addLabel("reveal", "-=0.2")
       // fill
       .to(pathRef.current, {
         fillOpacity: 1,
         duration: 1,
         ease: "elastic.out(0.5, 0.5)",
       })
-
-      // shoe drop + text start together
-      .addLabel("reveal", "-=0.2")
 
       .fromTo(
         shoeRef.current,
@@ -80,7 +78,7 @@ function DiscoverMore() {
           keyframes: [
             { opacity: 0, ease: "none", duration: 0 },
             { opacity: 1, ease: "power2.inOut", duration: 0.8 },
-            { y: 0, rotate: 0, scale: 1, ease: "power1.out", duration: 1.2 },
+            { y: 0, rotate: 0, scale: 1, ease: "power1.out" },
           ],
         },
         "reveal"
@@ -124,14 +122,10 @@ function DiscoverMore() {
         },
         "reveal+=0.4"
       )
-      .from(
+      .fromTo(
         ButtonRef.current,
-        {
-          opacity: 0,
-          y: 20,
-          duration: 0.4,
-          ease: "power2.out",
-        },
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
         "reveal+=0.6"
       );
   }, []);

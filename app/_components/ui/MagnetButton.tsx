@@ -2,7 +2,7 @@
 
 import { ReactNode, forwardRef, RefObject } from "react";
 import gsap from "gsap";
-import Button, { ButtonProps } from "./Button";
+import Button, { ButtonProps } from "./OrignalButton";
 
 type MagneticButtonProps = ButtonProps & {
   children: ReactNode;

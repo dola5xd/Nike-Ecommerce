@@ -1,7 +1,7 @@
-import type { Trending } from "@/app/_types/trending";
+import type { Trending } from "@/_types/trending";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "./Button";
+import Button from "./OrignalButton";
 import { MdArrowOutward } from "react-icons/md";
 
 function TrendingCard({

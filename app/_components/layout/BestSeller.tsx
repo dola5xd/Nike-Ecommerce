@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Button from "../ui/Button";
+import Button from "../ui/OrignalButton";
 import ProductCard from "../ui/ProductCard";
 import { MdArrowOutward } from "react-icons/md";
 

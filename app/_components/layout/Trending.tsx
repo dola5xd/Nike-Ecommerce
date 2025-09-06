@@ -1,4 +1,4 @@
-import type { Trending } from "@/app/_types/trending";
+import type { Trending } from "@/_types/trending";
 import TrendingCard from "../ui/TrendingCard";
 
 const trending: Trending[] = [

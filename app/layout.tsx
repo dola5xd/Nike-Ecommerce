@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Providers } from "./_providers/Providers";
 
 export const futuraExtraBold = localFont({
   src: [
@@ -48,7 +49,7 @@ export default function RootLayout({
       <body
         className={`${futuraExtraBold.variable} antialiased min-h-dvh min-w-screen overflow-x-hidden ${HelveticaNow.className}`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

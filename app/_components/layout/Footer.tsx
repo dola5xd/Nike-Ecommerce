@@ -3,7 +3,7 @@ import { SiX } from "react-icons/si";
 import { MdLocationOn } from "react-icons/md";
 import Link from "next/link";
 import Logo from "../ui/Logo";
-import { footerBottomLinks, footerLinks } from "@/_lib/footerLinks";
+import { footerBottomLinks, footerLinks } from "@/_data/footerLinks";
 
 export default function Footer() {
   return (

@@ -13,7 +13,7 @@ async function Header() {
   return (
     <>
       {user && !user.emailVerified && (
-        <div className=" w-full text-center text-body-medium py-4 bg-dark-900 text-light-300">
+        <div className="h-[80px] w-full text-center text-body-medium py-4 bg-dark-900 text-light-300">
           Please verfiy your account!{" "}
           <Link className="underline capitalize" href={"/verify"}>
             click here
@@ -29,24 +29,15 @@ async function Header() {
           <HeaderLinks />
         </nav>
 
-        <div>
-          <ul className="flex items-center gap-x-6 *:text-body-medium">
-            <li>
-              <Link href={"#"}>Search</Link>
-            </li>
-            <li>
-              {user ? (
-                <AccountDropdown user={user} />
-              ) : (
-                <Link href="/register">
-                  <Button size="sm" className="px-4">
-                    Create Account
-                  </Button>
-                </Link>
-              )}
-            </li>
-          </ul>
-        </div>
+        {user ? (
+          <AccountDropdown user={user} />
+        ) : (
+          <Link href="/register">
+            <Button size="sm" className="px-4">
+              Create Account
+            </Button>
+          </Link>
+        )}
       </header>
     </>
   );

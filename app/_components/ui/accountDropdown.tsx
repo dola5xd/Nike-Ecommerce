@@ -34,7 +34,9 @@ function AccountDropdown({ user }: { user: user }) {
       <DropdownMenuTrigger>
         <Avatar className="h-auto">
           <AvatarImage src={image ?? ""} />
-          <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
+          <AvatarFallback className="uppercase">
+            {name.slice(0, 2)}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

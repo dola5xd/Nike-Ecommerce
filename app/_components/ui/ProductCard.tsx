@@ -10,18 +10,23 @@ function ProductCard({ product }: { product: Product }) {
     ? urlFor(product.image)?.format("webp").url()
     : "";
 
+  const productHerf = `/product/${product.title.replaceAll(" ", "-")}`;
+
   return (
     <div className="relative min-h-[500px] w-full aspect-square rounded flex flex-col gap-y-4 transition-all duration-500 hover:[&>.overlay]:opacity-100">
       {/* Badge */}
       {product.badge?.label && (
-        <span className="absolute z-10 top-3 left-3 rounded-full px-3 py-1.5 bg-white text-red w-fit h-fit text-body-medium">
+        <span
+          className="absolute z-10 top-3 left-3 rounded-full px-3 py-1.5 bg-gray-100 w-fit h-fit text-body-medium"
+          style={{ color: product.badge.tone }}
+        >
           {product.badge.label}
         </span>
       )}
 
       {/* Hover Overlay */}
       <div className="absolute inset-0 z-20 flex items-center justify-center w-full transition-all duration-300 rounded opacity-0 h-3/4 bg-black/40 overlay">
-        <Link href={`/products/${product._id}`}>
+        <Link href={productHerf}>
           <Button variant="light" size="lg">
             View Details <MdArrowOutward size={20} />
           </Button>

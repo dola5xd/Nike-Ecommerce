@@ -5,7 +5,7 @@ export const filters = [
     options: [
       { value: "Men's Shoes", label: "Men's Shoes" },
       { value: "Women's Shoes", label: "Women's Shoes" },
-      { value: "Kid's Shoes", label: "Kid's Shoes" },
+      { value: "Kids' Shoes", label: "Kids' Shoes" },
     ],
   },
   {

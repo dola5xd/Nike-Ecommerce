@@ -1,0 +1,40 @@
+"use client";
+
+import { useState } from "react";
+
+const AllSize: number[] = Array.from({ length: 20 }, (_, i) => i + 30);
+
+function SizesBox({ sizes }: { sizes: string[] }) {
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
+
+  return (
+    <div className="flex flex-col gap-y-4">
+      <h4 className="font-semibold">Select Size</h4>
+      <div className="flex flex-wrap gap-x-3 gap-y-4">
+        {AllSize.map((size) => {
+          const isAvailable = sizes.includes(size.toString());
+          const isSelected = selectedSize === size;
+
+          return (
+            <button
+              key={size}
+              type="button"
+              disabled={!isAvailable}
+              onClick={() => isAvailable && setSelectedSize(size)}
+              className={`py-2.5 px-5 text-sm rounded ring-1 ring-light-400 transition-all  ${
+                isAvailable
+                  ? "cursor-pointer hover:bg-black/10"
+                  : "line-through bg-light-400 text-dark-700 cursor-not-allowed"
+              } ${isSelected ? "bg-black text-white hover:bg-black/50" : ""} 
+  `}
+            >
+              {size}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default SizesBox;

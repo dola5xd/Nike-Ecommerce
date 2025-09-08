@@ -15,7 +15,6 @@ export type Product = {
 export type ProductDetail = {
   _id: string;
   _type: "product";
-  _createdAt: string;
   _updatedAt: string;
   title: string;
   subtitle: string;
@@ -40,7 +39,7 @@ export type ProductDetail = {
     };
   }[];
 
-  sizes: number[];
+  sizes: string[];
 
   reviews: {
     _key: string;

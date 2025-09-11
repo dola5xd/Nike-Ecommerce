@@ -1,7 +1,7 @@
 import ProductCard from "@/_components/ui/ProductCard";
 import ProductInfo from "@/_components/ui/ProductInfo";
 import Thumbnails from "@/_components/ui/Thumbnails";
-import { getProductByName, getProductSuggest } from "@/_lib/sanity/api";
+import { getProductByName, getProductSuggest } from "@/_lib/api";
 import { ProductDetail } from "@/_types/product";
 
 async function page({ params }: { params: Promise<{ slug: string }> }) {

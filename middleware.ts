@@ -20,6 +20,15 @@ export default withAuth(
       if (nextUrl.pathname.startsWith("/verify") && token.emailVerified) {
         return NextResponse.redirect(new URL("/", req.url));
       }
+    } else {
+      // if user not logged in
+      // 🚫 Block access to /cart and /account
+      if (
+        nextUrl.pathname.startsWith("/cart") ||
+        nextUrl.pathname.startsWith("/account")
+      ) {
+        return NextResponse.redirect(new URL("/", req.url)); // redirect home
+      }
     }
   },
   {
@@ -30,5 +39,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/login", "/register", "/verify"],
+  matcher: ["/login", "/register", "/verify", "/cart", "/account"],
 };

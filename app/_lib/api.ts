@@ -1,6 +1,12 @@
 import { Product, ProductDetail } from "@/_types/product";
-import { client } from "./client";
-import { productQuery, productQueryGender } from "./queries";
+import { client } from "./sanity/client";
+import {
+  ItemQueryPrice,
+  productQuery,
+  productQueryGender,
+} from "./sanity/queries";
+import { CartItemQueryID } from "@/_lib/sanity/queries";
+import { ProductCart } from "@/_types/product";
 
 export const getProductByName = async (slug: string) => {
   try {
@@ -29,6 +35,32 @@ export const getProductSuggest = async (id: string, gender: string) => {
 
     // return 3 random
     return shuffled.slice(0, 3) as Product[];
+  } catch (err) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Something gone wrong!";
+    console.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
+export const getProductByID = async (id: string) => {
+  try {
+    const product = await client.fetch(CartItemQueryID, { id });
+
+    return product.at(0) as ProductCart;
+  } catch (err) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Something gone wrong!";
+    console.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
+export const getProductPrice = async (id: string) => {
+  try {
+    const product = await client.fetch(ItemQueryPrice, { id });
+
+    return product.at(0) as ProductCart;
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : "Something gone wrong!";

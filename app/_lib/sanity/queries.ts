@@ -59,3 +59,21 @@ export const productQueryGender = `
     badge,
   }
 `;
+
+export const CartItemQueryID = `
+*[_type == "product" && (!defined($id) || lower(_id) == lower($id))]
+{
+    _id,
+    title,
+    subtitle,
+    price,
+    "image": images[0].asset,
+  }
+`;
+
+export const ItemQueryPrice = `
+*[_type == "product" && (!defined($id) || lower(_id) == lower($id))]
+{
+    price,
+  }
+`;

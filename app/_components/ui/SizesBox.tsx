@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 const AllSize: number[] = Array.from({ length: 20 }, (_, i) => i + 30);
 
-function SizesBox({ sizes }: { sizes: string[] }) {
-  const [selectedSize, setSelectedSize] = useState<number | null>(null);
-
+function SizesBox({
+  sizes,
+  setSelectedSize,
+  selectedSize,
+}: {
+  sizes: string[];
+  selectedSize: number;
+  setSelectedSize: Dispatch<SetStateAction<number>>;
+}) {
   return (
     <div className="flex flex-col gap-y-4">
       <h4 className="font-semibold">Select Size</h4>

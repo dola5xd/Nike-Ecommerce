@@ -48,3 +48,11 @@ export type ProductDetail = {
     rating: number; // 1–5
   }[];
 };
+
+export type ProductCart = {
+  _id: string;
+  title: string;
+  subtitle: string;
+  price: number;
+  image?: string;
+};

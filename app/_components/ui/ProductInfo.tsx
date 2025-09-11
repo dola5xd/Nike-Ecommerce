@@ -7,10 +7,14 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useState, useMemo } from "react";
 import Stars from "@/_components/ui/Stars";
 import { VscAccount } from "react-icons/vsc";
+import { addToCart } from "@/_actions/addToCart";
+import toast from "react-hot-toast";
+import { CartItemType } from "@/_types/cart";
 
 function ProductInfo({ product }: { product: ProductDetail }) {
   const {
     title,
+    _id,
     subtitle,
     price,
     sizes,
@@ -23,6 +27,10 @@ function ProductInfo({ product }: { product: ProductDetail }) {
 
   const [showProductDetails, setShowProductDetails] = useState<boolean>(true);
   const [showReviews, setShowReviews] = useState<boolean>(false);
+  const [selectedSize, setSelectedSize] = useState<number>(
+    Number(sizes.at(0)) ?? 40
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // ✅ Average rating
   const averageRating = useMemo(() => {
@@ -31,16 +39,48 @@ function ProductInfo({ product }: { product: ProductDetail }) {
     return total / reviews.length;
   }, [reviews]);
 
+  const handleAddToCart = async () => {
+    try {
+      setIsLoading(true);
+      toast.loading("Adding to your Cart");
+      const cartItem: Partial<CartItemType> = {
+        productID: _id,
+        size: selectedSize,
+        quantity: 1,
+      };
+
+      await addToCart(cartItem);
+      toast.dismiss();
+      toast.success("This product added succesfully!");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Something Gone Wrong!";
+      toast.dismiss();
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col py-7 gap-y-4 h-full">
       <h1 className="text-heading-2 uppercase futura">{title}</h1>
       <h2 className="text-body-medium text-dark-700">{subtitle}</h2>
       <h3 className="text-heading-3 justify-end">${price}</h3>
-      <SizesBox sizes={sizes} />
+      <SizesBox
+        sizes={sizes}
+        selectedSize={selectedSize}
+        setSelectedSize={setSelectedSize}
+      />
 
       {/* Buttons */}
       <div className="flex flex-col gap-4 w-full">
-        <Button className="cursor-pointer py-7 text-white text-base rounded-full">
+        <Button
+          className="cursor-pointer py-7 text-white text-base rounded-full disabled:cursor-not-allowed disabled:bg-dark-700"
+          onClick={handleAddToCart}
+          disabled={isLoading}
+        >
           Add to Bag
         </Button>
         <Button

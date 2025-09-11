@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./_providers/Providers";
 
-export const futuraExtraBold = localFont({
+const futuraExtraBold = localFont({
   src: [
     {
       path: "./_fonts/Futura-Condensed-Extra-Bold.woff",

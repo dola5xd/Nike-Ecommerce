@@ -4,8 +4,6 @@ import Thumbnails from "@/_components/ui/Thumbnails";
 import { getProductByName, getProductSuggest } from "@/_lib/sanity/api";
 import { ProductDetail } from "@/_types/product";
 
-export const revalidate = 60 * 60 * 2;
-
 async function page({ params }: { params: Promise<{ slug: string }> }) {
   const slug = (await params).slug.at(0)!;
   const product: ProductDetail = await getProductByName(slug);

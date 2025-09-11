@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/_components/ui/avatar";
 import type { user } from "@/_types/user";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 function AccountDropdown({ user }: { user: user }) {
   const { name, image, email } = user;
@@ -45,8 +46,13 @@ function AccountDropdown({ user }: { user: user }) {
           <span className="text-xs">{email}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Cart</DropdownMenuItem>
-        <DropdownMenuItem>Account</DropdownMenuItem> <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Link href={"/account"}>Account</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={"/cart"}>Cart</Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onClick={handleLogout}>
           Logout
         </DropdownMenuItem>

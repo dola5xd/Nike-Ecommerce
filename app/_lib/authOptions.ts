@@ -4,13 +4,13 @@ import TwitterProvider from "next-auth/providers/twitter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "./firebaseAdmin";
 import { verifyPassword } from "../_utils/saltAndHashPassword";
-import { user } from "../_types/user";
+import { userDetail } from "../_types/user";
 
 // ============================
 // 🔹 Helper: Upsert into "users" only
 // ============================
 async function upsertUser(
-  user: user,
+  user: userDetail,
   account?: { provider?: string; providerAccountId?: string },
   profile?: Record<string, unknown>
 ) {
@@ -20,7 +20,8 @@ async function upsertUser(
   const snap = await usersRef.where("email", "==", user.email).limit(1).get();
 
   // ✅ Determine provider
-  const provider = (account?.provider as user["provider"]) ?? "credentials";
+  const provider =
+    (account?.provider as userDetail["provider"]) ?? "credentials";
   const isOAuth = provider === "google" || provider === "twitter";
   const emailVerified = isOAuth ? true : false;
 
@@ -70,7 +71,7 @@ async function upsertUser(
 // ============================
 declare module "next-auth" {
   interface Session {
-    user: user;
+    user: userDetail;
   }
 }
 
@@ -99,7 +100,7 @@ export const authOptions: AuthOptions = {
         if (snap.empty) throw new Error("No user found with this email");
 
         const doc = snap.docs[0];
-        const userData = doc.data() as user;
+        const userData = doc.data() as userDetail;
 
         const valid = await verifyPassword(password, userData.password!);
         if (!valid) throw new Error("Invalid credentials");
@@ -130,7 +131,7 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       await upsertUser(
-        user as user,
+        user as userDetail,
         account ?? undefined,
         profile as Record<string, unknown>
       );
@@ -140,7 +141,7 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       // If user exists (first login), put verified status in token
       if (user) {
-        token.emailVerified = (user as user).emailVerified ?? false;
+        token.emailVerified = (user as userDetail).emailVerified ?? false;
       }
 
       // Always refresh from Firestore (keep token in sync)
@@ -152,7 +153,7 @@ export const authOptions: AuthOptions = {
           .get();
 
         if (!snap.empty) {
-          const userData = snap.docs[0].data() as user;
+          const userData = snap.docs[0].data() as userDetail;
           token.emailVerified = userData.emailVerified ?? false;
           token.id = userData.id;
           token.cart = userData.cart ?? [];

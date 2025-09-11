@@ -3,6 +3,16 @@ export type user = {
   name: string;
   email: string;
   image?: string;
+  createdAt: number;
+  cart: [];
+  emailVerified: boolean;
+};
+
+export type userDetail = {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
   provider: "google" | "twitter" | "credentials";
   createdAt: number;
   updatedAt: number;

@@ -33,7 +33,7 @@ async function Header() {
           <AccountDropdown user={user} />
         ) : (
           <Link href="/register">
-            <Button size="sm" className="px-4">
+            <Button size="sm" variant={"outline"} className="px-4">
               Create Account
             </Button>
           </Link>

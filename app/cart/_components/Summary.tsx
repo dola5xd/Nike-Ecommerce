@@ -13,7 +13,6 @@ async function Summary({ cart }: { cart: CartItemType[] }) {
     return acc + item.quantity * price;
   }, 0);
 
-  console.log("subtotal: ", subtotal);
   const delivery = 2.0;
   const total = subtotal + delivery;
 

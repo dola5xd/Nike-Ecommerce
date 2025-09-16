@@ -1,11 +1,16 @@
+import { AddressForm } from "@/_components/ui/AddressDialog";
+import { CartItemType } from "./cart";
+
 export type user = {
   id: string;
   name: string;
   email: string;
   image?: string;
   createdAt: number;
-  cart: [];
+  cart: CartItemType[] | [];
   emailVerified: boolean;
+  stripeCustomerId: string;
+  address: AddressForm[] | [];
 };
 
 export type userDetail = {
@@ -16,7 +21,9 @@ export type userDetail = {
   provider: "google" | "twitter" | "credentials";
   createdAt: number;
   updatedAt: number;
-  cart: [];
+  cart: CartItemType[] | [];
   password?: string | null;
   emailVerified: boolean;
+  stripeCustomerId: string;
+  address: AddressForm[] | [];
 };

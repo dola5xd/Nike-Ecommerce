@@ -20,6 +20,10 @@ export default withAuth(
       if (nextUrl.pathname.startsWith("/verify") && token.emailVerified) {
         return NextResponse.redirect(new URL("/", req.url));
       }
+      // auto redirect to defualt page of account
+      if (nextUrl.pathname.startsWith("/account") && token.emailVerified) {
+        return NextResponse.redirect(new URL("/account/orders", req.url));
+      }
     } else {
       // if user not logged in
       // 🚫 Block access to /cart and /account

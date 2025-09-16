@@ -5,10 +5,15 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "./firebaseAdmin";
 import { verifyPassword } from "../_utils/saltAndHashPassword";
 import { userDetail } from "../_types/user";
+import Stripe from "stripe";
+import { AddressForm } from "@/_components/ui/AddressDialog";
 
 // ============================
 // 🔹 Helper: Upsert into "users" only
 // ============================
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
 async function upsertUser(
   user: userDetail,
   account?: { provider?: string; providerAccountId?: string },
@@ -19,7 +24,6 @@ async function upsertUser(
   const usersRef = db.collection("users");
   const snap = await usersRef.where("email", "==", user.email).limit(1).get();
 
-  // ✅ Determine provider
   const provider =
     (account?.provider as userDetail["provider"]) ?? "credentials";
   const isOAuth = provider === "google" || provider === "twitter";
@@ -28,21 +32,30 @@ async function upsertUser(
   if (!snap.empty) {
     // 🔹 Existing user
     const existingDoc = snap.docs[0];
-    const existingId = existingDoc.id;
-    const userData = existingDoc.data();
+    const userData = existingDoc.data() as userDetail;
 
-    await usersRef.doc(existingId).set(
+    // ✅ Ensure Stripe ID exists
+    let stripeCustomerId = userData.stripeCustomerId;
+    if (!stripeCustomerId) {
+      const customer = await stripe.customers.create({
+        email: user.email,
+        name: user.name ?? undefined,
+      });
+      stripeCustomerId = customer.id;
+    }
+
+    await usersRef.doc(existingDoc.id).set(
       {
-        id: existingId,
+        ...userData,
+        id: existingDoc.id,
         name: user.name || userData.name || "",
         email: user.email,
         image: user.image || userData.image || null,
-        password: userData.password ?? null,
         emailVerified: userData.emailVerified || emailVerified,
-        createdAt: userData.createdAt || Date.now(),
-        updatedAt: Date.now(),
-        cart: userData.cart || [],
         provider,
+        updatedAt: Date.now(),
+        address: userData.address || [],
+        stripeCustomerId,
       },
       { merge: true }
     );
@@ -51,17 +64,25 @@ async function upsertUser(
     const newId = String(user.id || account?.providerAccountId || profile?.sub);
     if (!newId || newId === "undefined" || newId === "null") return;
 
+    // ✅ Create Stripe customer
+    const customer = await stripe.customers.create({
+      email: user.email,
+      name: user.name ?? undefined,
+    });
+
     await usersRef.doc(newId).set({
       id: newId,
       name: user.name || "",
       email: user.email,
       image: user.image || null,
-      password: null, // only credentials will update this later
+      password: null,
       emailVerified,
       cart: [],
       createdAt: Date.now(),
       updatedAt: Date.now(),
       provider,
+      address: [],
+      stripeCustomerId: customer.id,
     });
   }
 }
@@ -151,16 +172,16 @@ export const authOptions: AuthOptions = {
           .where("email", "==", token.email as string)
           .limit(1)
           .get();
-
         if (!snap.empty) {
           const userData = snap.docs[0].data() as userDetail;
-          token.emailVerified = userData.emailVerified ?? false;
           token.id = userData.id;
           token.cart = userData.cart ?? [];
           token.createdAt = userData.createdAt ?? null;
+          token.emailVerified = userData.emailVerified ?? false;
+          token.stripeCustomerId = userData.stripeCustomerId ?? null;
+          token.address = userData.address ?? null;
         }
       }
-
       return token;
     },
 
@@ -170,8 +191,11 @@ export const authOptions: AuthOptions = {
         session.user.cart = token.cart as [];
         session.user.createdAt = token.createdAt as number;
         session.user.emailVerified = token.emailVerified as boolean;
+        session.user.stripeCustomerId = token.stripeCustomerId as
+          | string
+          | undefined;
+        session.user.address = token.address as AddressForm[] | [];
       }
-
       return session;
     },
   },

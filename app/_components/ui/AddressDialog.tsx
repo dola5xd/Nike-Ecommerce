@@ -76,13 +76,13 @@ export default function AddressDialog({
 
   return (
     <div className="flex flex-col gap-4 h-1/3">
-      <h2 className="text-body-medium uppercase futura">Address:</h2>
+      <h2 className="uppercase text-body-medium futura">Address:</h2>
       <ScrollArea className="max-h-[85%] pr-4">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2"
+              className="flex items-center justify-center w-full gap-2"
             >
               <Plus /> Add new Address
             </Button>
@@ -102,10 +102,10 @@ export default function AddressDialog({
               <Input
                 {...register("fullName")}
                 placeholder="Full Name"
-                className="border rounded-lg px-4 py-2 w-full"
+                className="w-full px-4 py-2 border rounded-lg"
               />
               {errors.fullName && (
-                <p className="text-red-500 text-xs">
+                <p className="text-xs text-red-500">
                   {errors.fullName.message}
                 </p>
               )}
@@ -113,33 +113,33 @@ export default function AddressDialog({
               <Input
                 {...register("street")}
                 placeholder="Street Address"
-                className="border rounded-lg px-4 py-2 w-full"
+                className="w-full px-4 py-2 border rounded-lg"
               />
               {errors.street && (
-                <p className="text-red-500 text-xs">{errors.street.message}</p>
+                <p className="text-xs text-red-500">{errors.street.message}</p>
               )}
 
               <div className="flex gap-3">
                 <Input
                   {...register("city")}
                   placeholder="City"
-                  className="border rounded-lg px-4 py-2 w-full"
+                  className="w-full px-4 py-2 border rounded-lg"
                 />
                 <Input
                   {...register("state")}
                   placeholder="State"
-                  className="border rounded-lg px-4 py-2 w-full"
+                  className="w-full px-4 py-2 border rounded-lg"
                 />
               </div>
               {(errors.city || errors.state) && (
                 <div className="flex gap-3">
                   {errors.city && (
-                    <p className="text-red-500 text-xs w-full">
+                    <p className="w-full text-xs text-red-500">
                       {errors.city.message}
                     </p>
                   )}
                   {errors.state && (
-                    <p className="text-red-500 text-xs w-full">
+                    <p className="w-full text-xs text-red-500">
                       {errors.state.message}
                     </p>
                   )}
@@ -149,19 +149,19 @@ export default function AddressDialog({
               <Input
                 {...register("zip")}
                 placeholder="ZIP / Postal Code"
-                className="border rounded-lg px-4 py-2 w-full"
+                className="w-full px-4 py-2 border rounded-lg"
               />
               {errors.zip && (
-                <p className="text-red-500 text-xs">{errors.zip.message}</p>
+                <p className="text-xs text-red-500">{errors.zip.message}</p>
               )}
 
               <Input
                 {...register("phone")}
                 placeholder="Phone Number"
-                className="border rounded-lg px-4 py-2 w-full"
+                className="w-full px-4 py-2 border rounded-lg"
               />
               {errors.phone && (
-                <p className="text-red-500 text-xs">{errors.phone.message}</p>
+                <p className="text-xs text-red-500">{errors.phone.message}</p>
               )}
 
               <Button type="submit" disabled={isSubmitting} className="mt-2">
@@ -172,7 +172,7 @@ export default function AddressDialog({
         </Dialog>
 
         {savedAddress.length > 0 && (
-          <div className="flex flex-col gap-y-4 mt-4">
+          <div className="flex flex-col mt-4 gap-y-4">
             {savedAddress.map((address, i) => (
               <button
                 key={i}

@@ -62,9 +62,9 @@ function UserInfo({
   };
 
   return (
-    <div className="outline outline-dark-700 w-1/3 rounded-lg p-7 flex flex-col gap-y-8 bg-white shadow-sm justify-center transition duration-300">
+    <div className="flex flex-col justify-center w-1/3 transition duration-300 bg-white rounded-lg shadow-sm outline outline-dark-700 p-7 gap-y-8">
       <div className="text-center">
-        <h2 className="text-heading-3 font-semibold">We’ll Bring It to You!</h2>
+        <h2 className="font-semibold text-heading-3">We’ll Bring It to You!</h2>
         <p className="text-caption text-dark-700">
           Just complete your information to proceed
         </p>
@@ -83,7 +83,7 @@ function UserInfo({
       />
 
       <Button
-        className="disabled:bg-dark-700 text-white w-full cursor-pointer"
+        className="w-full text-white cursor-pointer disabled:bg-dark-700"
         onClick={handleConfirm}
         disabled={!selectedPayment || !selectedAddress}
       >

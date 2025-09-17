@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 function Tabs() {
   const pathName = usePathname();
   return (
-    <div className="flex flex-col justify-center h-full col-span-1 gap-4 text-center rounded outline outline-light-400">
+    <div className="flex flex-col justify-center h-full col-span-1 gap-4 text-center rounded outline outline-light-300">
       {contentTabs.map((tab, i) => (
         <Link
           key={i}

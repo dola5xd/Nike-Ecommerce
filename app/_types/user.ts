@@ -1,5 +1,6 @@
 import { AddressForm } from "@/_components/ui/AddressDialog";
 import { CartItemType } from "./cart";
+import { favoriteItem } from "./favorites";
 
 export type user = {
   id: string;
@@ -11,6 +12,7 @@ export type user = {
   emailVerified: boolean;
   stripeCustomerId: string;
   address: AddressForm[] | [];
+  favorites: favoriteItem[] | [];
 };
 
 export type userDetail = {
@@ -26,4 +28,5 @@ export type userDetail = {
   emailVerified: boolean;
   stripeCustomerId: string;
   address: AddressForm[] | [];
+  favorites: favoriteItem[] | [];
 };

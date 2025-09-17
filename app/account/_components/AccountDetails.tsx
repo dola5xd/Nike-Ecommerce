@@ -21,6 +21,7 @@ import { Input } from "@/_components/ui/input";
 import { Button } from "@/_components/ui/button";
 import { getUser } from "@/_actions/getUser";
 import { useRouter } from "next/navigation";
+import { ScrollArea } from "@/_components/ui/scroll-area";
 
 export type UpdatePayload = {
   email: string;
@@ -129,121 +130,123 @@ function AccountDetails({ user }: { user: userDetail }) {
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 px-10 w-full"
-      >
-        {/* Avatar */}
-        <div className="flex items-center gap-4">
-          <Image
-            src={preview ?? "/default-avatar.png"}
-            alt="Profile"
-            height={100}
-            width={100}
-            className="rounded-full object-cover border"
-          />
-          <Input type="file" accept="image/*" onChange={handleImageUpload} />
-        </div>
-
-        {/* Email */}
-        <FormItem>
-          <FormLabel>Email</FormLabel>
-          <Input
-            type="email"
-            value={user.email}
-            disabled
-            className="bg-muted cursor-not-allowed"
-          />
-        </FormItem>
-
-        {/* Name */}
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Current Password */}
-        <FormField
-          control={form.control}
-          name="currentPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Current Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder={
-                    hasPassword
-                      ? "Enter current password"
-                      : "Social account - password disabled"
-                  }
-                  {...field}
-                  disabled={!hasPassword}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* New Password */}
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Enter new password"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Confirm Password */}
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Confirm password"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button
-          type="submit"
-          className="w-full cursor-pointer"
-          size={"lg"}
-          disabled={isPending}
+    <ScrollArea className="max-h-[320px] pr-4">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6 px-10 max-w-2xl mx-auto"
         >
-          {isPending ? "Saving..." : "Save Changes"}
-        </Button>
-      </form>
-    </Form>
+          {/* Avatar */}
+          <div className="flex items-center gap-4">
+            <Image
+              src={preview ?? "/default-avatar.png"}
+              alt="Profile"
+              height={100}
+              width={100}
+              className="rounded-full object-cover border"
+            />
+            <Input type="file" accept="image/*" onChange={handleImageUpload} />
+          </div>
+
+          {/* Email */}
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="email"
+              value={user.email}
+              disabled
+              className="bg-muted cursor-not-allowed"
+            />
+          </FormItem>
+
+          {/* Name */}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Current Password */}
+          <FormField
+            control={form.control}
+            name="currentPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Current Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder={
+                      hasPassword
+                        ? "Enter current password"
+                        : "Social account - create password!"
+                    }
+                    {...field}
+                    disabled={!hasPassword}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* New Password */}
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Enter new password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Confirm Password */}
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Confirm password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button
+            type="submit"
+            className="w-full cursor-pointer"
+            size={"lg"}
+            disabled={isPending}
+          >
+            {isPending ? "Saving..." : "Save Changes"}
+          </Button>
+        </form>
+      </Form>
+    </ScrollArea>
   );
 }
 

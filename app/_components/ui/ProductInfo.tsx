@@ -1,7 +1,7 @@
 "use client";
 import SizesBox from "@/_components/ui/SizesBox";
 import { ProductDetail } from "@/_types/product";
-import { BsHeart } from "react-icons/bs";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { Button } from "./button";
 import { IoIosArrowDown } from "react-icons/io";
 import { useState, useMemo } from "react";
@@ -10,8 +10,18 @@ import { VscAccount } from "react-icons/vsc";
 import { addToCart } from "@/_actions/addToCart";
 import toast from "react-hot-toast";
 import { CartItemType } from "@/_types/cart";
+import { favoriteItem } from "@/_types/favorites";
+import { addFavorite } from "@/_actions/addFavorite";
+import { useRouter } from "next/navigation";
 
-function ProductInfo({ product }: { product: ProductDetail }) {
+function ProductInfo({
+  product,
+  isFavorite,
+}: {
+  product: ProductDetail;
+  isFavorite: boolean;
+}) {
+  const router = useRouter();
   const {
     title,
     _id,
@@ -63,6 +73,29 @@ function ProductInfo({ product }: { product: ProductDetail }) {
     }
   };
 
+  const handleAddToFavorite = async () => {
+    try {
+      setIsLoading(true);
+      toast.loading("Adding to your Favorites");
+      const favoriteItem: Partial<favoriteItem> = {
+        productID: _id,
+      };
+
+      await addFavorite(favoriteItem);
+      toast.dismiss();
+      toast.success("This product added succesfully!");
+      router.refresh();
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Something Gone Wrong!";
+      toast.dismiss();
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col py-7 gap-y-4 h-full">
       <h1 className="text-heading-2 uppercase futura">{title}</h1>
@@ -85,9 +118,11 @@ function ProductInfo({ product }: { product: ProductDetail }) {
         </Button>
         <Button
           variant={"outline"}
-          className="cursor-pointer py-7 text-base rounded-full hover:bg-light-400"
+          className={`cursor-pointer py-7 text-base rounded-full ${isFavorite ? "text-white bg-red hover:bg-transparent hover:text-red" : "hover:bg-light-400"}`}
+          onClick={handleAddToFavorite}
+          disabled={isLoading}
         >
-          <BsHeart size={16} />
+          {isFavorite ? <BsHeartFill size={16} /> : <BsHeart size={16} />}
           Favorite
         </Button>
       </div>

@@ -6,10 +6,14 @@ import { authOptions } from "@/_lib/authOptions";
 import AccountDropdown from "../ui/accountDropdown";
 import { user } from "@/_types/user";
 import { Button } from "../ui/button";
+import { IoCartOutline } from "react-icons/io5";
 
 async function Header() {
   const session = await getServerSession(authOptions);
   const user = session?.user as user;
+
+  const cartLength = user.cart.length;
+
   return (
     <>
       {user && !user.emailVerified && (
@@ -29,15 +33,23 @@ async function Header() {
           <HeaderLinks />
         </nav>
 
-        {user ? (
-          <AccountDropdown user={user} />
-        ) : (
-          <Link href="/register">
-            <Button size="sm" variant={"outline"} className="px-4">
-              Create Account
-            </Button>
+        <div className="flex items-center gap-x-3">
+          <Link href="/account" className="relative">
+            <IoCartOutline size={30} />
+            <span className="bg-dark-900 absolute -top-2.5 -right-2 h-5 w-5 text-xs font-medium text-white flex items-center justify-center rounded-full">
+              {cartLength}
+            </span>
           </Link>
-        )}
+          {user ? (
+            <AccountDropdown user={user} />
+          ) : (
+            <Link href="/register">
+              <Button size="sm" variant={"outline"} className="px-4">
+                Create Account
+              </Button>
+            </Link>
+          )}
+        </div>
       </header>
     </>
   );

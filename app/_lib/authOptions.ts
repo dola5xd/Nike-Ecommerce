@@ -7,6 +7,7 @@ import { verifyPassword } from "../_utils/saltAndHashPassword";
 import { userDetail } from "../_types/user";
 import Stripe from "stripe";
 import { AddressForm } from "@/_components/ui/AddressDialog";
+import { favoriteItem } from "@/_types/favorites";
 
 // ============================
 // 🔹 Helper: Upsert into "users" only
@@ -55,6 +56,7 @@ async function upsertUser(
         provider,
         updatedAt: Date.now(),
         address: userData.address || [],
+        favorites: userData.favorites || [],
         stripeCustomerId,
       },
       { merge: true }
@@ -82,6 +84,7 @@ async function upsertUser(
       updatedAt: Date.now(),
       provider,
       address: [],
+      favorites: [],
       stripeCustomerId: customer.id,
     });
   }
@@ -180,6 +183,7 @@ export const authOptions: AuthOptions = {
           token.emailVerified = userData.emailVerified ?? false;
           token.stripeCustomerId = userData.stripeCustomerId ?? null;
           token.address = userData.address ?? null;
+          token.favorites = userData.favorites ?? null;
         }
       }
       return token;
@@ -191,10 +195,9 @@ export const authOptions: AuthOptions = {
         session.user.cart = token.cart as [];
         session.user.createdAt = token.createdAt as number;
         session.user.emailVerified = token.emailVerified as boolean;
-        session.user.stripeCustomerId = token.stripeCustomerId as
-          | string
-          | undefined;
+        session.user.stripeCustomerId = token.stripeCustomerId as string;
         session.user.address = token.address as AddressForm[] | [];
+        session.user.favorites = token.favorites as favoriteItem[] | [];
       }
       return session;
     },

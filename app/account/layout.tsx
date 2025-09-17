@@ -7,7 +7,7 @@ function layout({ children }: { children: ReactNode }) {
   return (
     <main className="min-h-dvh">
       <Header />
-      <section className="h-[calc(100vh-160px)] flex flex-col w-screen gap-10 px-32 py-10">
+      <section className="h-[calc(100vh-160px)] flex flex-col w-screen gap-7 px-32 py-4">
         <UserInfo />
         <div className="grid items-start w-full grid-cols-5 gap-x-4">
           <Tabs />

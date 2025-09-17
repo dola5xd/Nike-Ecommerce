@@ -55,7 +55,7 @@ export default function PaymentDialog({
 
   return (
     <div className="flex flex-col gap-4 h-1/3">
-      <h2 className="text-body-medium uppercase futura">Payment:</h2>
+      <h2 className="uppercase text-body-medium futura">Payment:</h2>
       <ScrollArea className="max-h-[90%] pr-4">
         <RadioGroup
           className="flex flex-col gap-y-4"
@@ -76,11 +76,11 @@ export default function PaymentDialog({
         </RadioGroup>
 
         {selected.startsWith("card") && (
-          <div className="mt-4 flex flex-col gap-y-4">
+          <div className="flex flex-col mt-4 gap-y-4">
             <Button onClick={() => setOpen(true)}>Add new card</Button>
             {savedCards.length > 0 && (
               <>
-                <h4 className="text-sm font-medium mb-2">Saved cards</h4>
+                <h4 className="mb-2 text-sm font-medium">Saved cards</h4>
                 <div className="flex flex-col gap-y-4">
                   {savedCards.map((card) => (
                     <button

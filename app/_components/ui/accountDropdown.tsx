@@ -33,8 +33,13 @@ function AccountDropdown({ user }: { user: user }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar className="h-auto">
-          <AvatarImage src={image ?? ""} />
+        <Avatar className="h-[40px] w-[40px]">
+          <AvatarImage
+            src={image ?? ""}
+            width={40}
+            height={40}
+            className="object-cover aspect-square"
+          />
           <AvatarFallback className="uppercase">
             {name.slice(0, 2)}
           </AvatarFallback>

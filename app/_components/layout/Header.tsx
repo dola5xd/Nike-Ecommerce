@@ -12,7 +12,7 @@ async function Header() {
   const session = await getServerSession(authOptions);
   const user = session?.user as user;
 
-  const cartLength = user.cart.length;
+  const cartLength = user?.cart.length;
 
   return (
     <>
@@ -24,22 +24,25 @@ async function Header() {
           </Link>
         </div>
       )}
-      <header className="py-6 px-10 flex items-center justify-between bg-light-100">
-        <span>
+
+      <header className="flex flex-col items-center px-4 py-3 mt-1 md:py-6 md:px-10 md:flex-row md:justify-between bg-light-100 gap-y-4">
+        <Link href={"/"} className="mt-1">
           <Logo color="#000" height="22" width="62" />
-        </span>
+        </Link>
 
         <nav>
           <HeaderLinks />
         </nav>
 
         <div className="flex items-center gap-x-3">
-          <Link href="/account" className="relative">
-            <IoCartOutline size={30} />
-            <span className="bg-dark-900 absolute -top-2.5 -right-2 h-5 w-5 text-xs font-medium text-white flex items-center justify-center rounded-full">
-              {cartLength}
-            </span>
-          </Link>
+          {user && (
+            <Link href="/cart" className="relative">
+              <IoCartOutline className="h-[20px] w-[20px] md:h-[30px] md:w-[30px]" />
+              <span className="bg-dark-900 absolute -top-2.5 -right-2 h-4 w-4 md:h-5 md:w-5 text-xs font-medium text-white flex items-center justify-center rounded-full">
+                {cartLength}
+              </span>
+            </Link>
+          )}
           {user ? (
             <AccountDropdown user={user} />
           ) : (

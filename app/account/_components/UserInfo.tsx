@@ -13,7 +13,12 @@ async function UserInfo() {
   return (
     <div className="flex items-center w-full gap-x-2">
       <Avatar className="w-20 h-20">
-        <AvatarImage src={image} className="object-cover" />
+        <AvatarImage
+          src={
+            image ?? `https://avatar.iran.liara.run/username?username=${name}`
+          }
+          className="object-cover"
+        />
         <AvatarFallback className="text-center uppercase futura text-lead">
           {name.slice(0, 2)}
         </AvatarFallback>

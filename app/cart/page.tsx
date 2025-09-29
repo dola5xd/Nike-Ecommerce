@@ -24,7 +24,7 @@ async function page() {
                 href="/products"
                 className="inline-block px-5 py-3 rounded-full font-semibold text-lead hover:underline duration-500"
               >
-                🛒 Your cart is empty — let’s add some!
+                🛒 Your cart is empty — let’s add some shoes!
               </Link>
             </p>
           )}

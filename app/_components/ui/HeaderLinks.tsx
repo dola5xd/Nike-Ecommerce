@@ -1,7 +1,7 @@
 import Link from "next/link";
 function HeaderLinks() {
   return (
-    <ul className="flex items-center gap-x-6 *:text-body-medium">
+    <ul className="flex items-center gap-x-1.5 md:gap-x-6 *:text-caption md:*:text-body-medium">
       <li>
         <Link href={"/products?subtitle=Men%27s+Shoes"}>Men</Link>
       </li>

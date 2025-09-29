@@ -8,7 +8,6 @@ import FavoriteCard from "../_components/FavoriteCard";
 async function page() {
   const session = await getServerSession(authOptions);
   const favorites = session?.user.favorites as favoriteItem[];
-  console.log("favorites: ", favorites);
 
   return (
     <div className="flex flex-col h-full col-span-4 px-10 py-10 rounded outline outline-light-300 gap-y-10">

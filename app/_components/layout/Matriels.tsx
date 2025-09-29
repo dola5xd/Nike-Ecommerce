@@ -13,7 +13,6 @@ function Matriels() {
   const logoRef = useRef<SVGSVGElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const paraRef = useRef<HTMLParagraphElement | null>(null);
-  const quoteRef = useRef<HTMLHeadingElement | null>(null);
 
   useGSAP(() => {
     if (!containerRef.current) return;
@@ -52,8 +51,8 @@ function Matriels() {
     );
 
     // Quote (split by line)
-    if (quoteRef.current) {
-      const split = new SplitText(quoteRef.current, {
+    if (headingRef.current) {
+      const split = new SplitText(headingRef.current, {
         type: "words,lines",
         mask: "lines",
         linesClass: "line",
@@ -79,20 +78,33 @@ function Matriels() {
     <section
       id="matriels"
       ref={containerRef}
-      className="h-[100dvh] flex flex-col justify-start items-center py-28 px-10 w-full relative overflow-hidden futura"
+      className="h-[100dvh] flex flex-col justify-start items-center py-28 md:py-10 lg:py-28 px-10 w-full relative overflow-hidden"
     >
       {/* Text Content */}
-      <div className="flex flex-col items-center gap-6 text-center max-w-3xl relative z-50">
-        <Logo ref={logoRef} color="#000" height="90" width="200" />
+      <div className="relative flex flex-col items-center max-w-3xl gap-6 text-center">
+        <Logo
+          ref={logoRef}
+          color="#000"
+          height="90"
+          width="200"
+          className="z-50 hidden md:block "
+        />
+        <Logo
+          ref={logoRef}
+          color="#000"
+          height="45"
+          width="100"
+          className="z-50 md:hidden"
+        />
 
         <h2
           ref={headingRef}
-          className="text-5xl font-extrabold tracking-tight text-dark-900"
+          className="z-50 tracking-tight uppercase md:max-w-lg text-heading-2 text-dark-900 futura"
         >
           Nike Is The <span className="text-[#FF3C00]">Perfection</span>
         </h2>
 
-        <p ref={paraRef} className="text-lg text-gray-600">
+        <p ref={paraRef} className="z-0 text-gray-600 text-caption">
           Crafted with precision. Designed for performance. Worn for confidence.
         </p>
       </div>

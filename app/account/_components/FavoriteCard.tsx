@@ -7,7 +7,6 @@ import { urlFor } from "@/_utils/utils";
 
 async function FavoriteCard({ favorite }: { favorite: favoriteItem }) {
   const product: ProductCart | null = await getProductByID(favorite.productID);
-  console.log("product: ", product);
 
   if (!product) return null;
   const imageSrc = urlFor(product.image!)?.url() ?? "";

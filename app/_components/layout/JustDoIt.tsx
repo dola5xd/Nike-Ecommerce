@@ -7,7 +7,7 @@ import { SplitText } from "gsap/SplitText";
 import { useRef } from "react";
 import MagneticButton from "../ui/MagnetButton";
 
-gsap.registerPlugin(DrawSVGPlugin, ScrollTrigger);
+gsap.registerPlugin(DrawSVGPlugin, ScrollTrigger, SplitText);
 
 function JustDoIt() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -27,7 +27,10 @@ function JustDoIt() {
     )
       return;
 
-    // === Play video on enter ===
+    // ✅ gsap.matchMedia context
+    const mm = gsap.matchMedia();
+
+    // === Video playback control ===
     ScrollTrigger.create({
       trigger: sectionRef.current,
       start: "top center",
@@ -37,131 +40,186 @@ function JustDoIt() {
 
     // === Smooth looping video ===
     const handleEnded = () => {
-      // Fade out video + fade bg
       gsap.to(videoRef.current, { opacity: 0, duration: 1 });
-      gsap.to(containerRef, { backgroundColor: "black", duration: 1 });
+      gsap.to(containerRef.current, { backgroundColor: "black", duration: 1 });
 
-      // Restart video after fade-out
       gsap.delayedCall(1, () => {
-        videoRef.current!.currentTime = 0;
-        videoRef.current!.play();
+        if (!videoRef.current) return;
+        videoRef.current.currentTime = 0;
+        videoRef.current.play();
 
-        // Fade back in video + reset bg
         gsap.to(videoRef.current, { opacity: 1, duration: 1 });
-        gsap.to(containerRef, { backgroundColor: "transparent", duration: 1 });
+        gsap.to(containerRef.current, {
+          backgroundColor: "transparent",
+          duration: 1,
+        });
       });
     };
     videoRef.current.addEventListener("ended", handleEnded);
 
-    // === Main container animation (padding + borderRadius) ===
-    const containerTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top center",
-        end: "bottom bottom",
-        scrub: true,
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    containerTl
-      .fromTo(
-        sectionRef.current,
-        { padding: 0 },
-        { padding: "40px", ease: "power2.inOut" },
-        0
-      )
-      .fromTo(
-        containerRef.current,
-        { borderRadius: 0 },
-        { borderRadius: "24px", ease: "power2.inOut" },
-        0
-      );
-
-    // === Swoosh animation (draw + fill) ===
-    const swooshTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top center",
-        end: "bottom center",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    swooshTl
-      .fromTo(
-        pathRef.current,
-        { drawSVG: "0% 0%" },
-        { drawSVG: "0% 100%", duration: 2, ease: "power2.inOut" }
-      )
-      .to(pathRef.current, {
-        fill: "#fff",
-        duration: 1,
-        ease: "power2.inOut",
+    // ✅ Animations per screen size
+    mm.add("(max-width: 640px)", () => {
+      // Create timeline with pin
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "+=125%",
+          scrub: true,
+          pin: true,
+          anticipatePin: 1,
+        },
       });
 
-    // === Split text animation ===
-    const split = new SplitText(textRef.current, { type: "words" });
+      // Animate in
+      tl.fromTo(sectionRef.current, { padding: 0 }, { padding: "20px" })
+        .fromTo(
+          containerRef.current,
+          { borderRadius: 0 },
+          { borderRadius: "4px" }
+        )
+        // ✅ Animate back out when scroll ends
+        .to(sectionRef.current, { padding: 0 })
+        .to(containerRef.current, { borderRadius: 0 });
 
-    gsap.fromTo(
-      split.words,
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-        stagger: 0.3,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top center",
-          end: "bottom bottom",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
+      // Path animation
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top center",
+            end: "bottom center",
+          },
+        })
+        .fromTo(
+          pathRef.current,
+          { drawSVG: "0% 0%" },
+          { drawSVG: "0% 100%", duration: 2, ease: "power2.inOut" }
+        )
+        .to(pathRef.current, { fill: "#fff", duration: 1 });
 
-    // === CTA animation ===
-    gsap.fromTo(
-      ctaRef.current,
-      { opacity: 0, scale: 0.8 },
-      {
-        opacity: 1,
-        scale: 1,
-        duration: 1,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 25%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
+      const split = new SplitText(textRef.current!, { type: "words" });
+      gsap.fromTo(
+        split.words,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.3,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: sectionRef.current, start: "top center" },
+        }
+      );
+
+      gsap.fromTo(
+        ctaRef.current,
+        { opacity: 0, scale: 0.8 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 25%",
+          },
+        }
+      );
+    });
+
+    mm.add("(min-width: 641px)", () => {
+      // Larger padding, stronger animations
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top center",
+            end: "bottom bottom",
+            scrub: true,
+          },
+        })
+        .fromTo(sectionRef.current, { padding: 0 }, { padding: "40px" })
+        .fromTo(
+          containerRef.current,
+          { borderRadius: 0 },
+          { borderRadius: "24px" }
+        );
+
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top center",
+            end: "bottom center",
+          },
+        })
+        .fromTo(
+          pathRef.current,
+          { drawSVG: "0% 0%" },
+          { drawSVG: "0% 100%", duration: 2, ease: "power2.inOut" }
+        )
+        .to(pathRef.current, { fill: "#fff", duration: 1 });
+
+      const split = new SplitText(textRef.current!, { type: "words" });
+      gsap.fromTo(
+        split.words,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.3,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: sectionRef.current, start: "top center" },
+        }
+      );
+
+      gsap.fromTo(
+        ctaRef.current,
+        { opacity: 0, scale: 0.8 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 25%",
+          },
+        }
+      );
+    });
+
+    // ✅ Cleanup on unmount
+    return () => {
+      videoRef.current?.removeEventListener("ended", handleEnded);
+      mm.revert();
+    };
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-screen p-10 h-dvh">
+    <section ref={sectionRef} className="w-screen h-screen md:p-10">
       <div
         ref={containerRef}
-        className="relative flex flex-col items-center justify-center w-full h-full overflow-hidden text-light-100 rounded-3xl gap-y-10 bg-dark-900"
+        className="relative flex flex-col items-center justify-center w-full h-full overflow-hidden rounded md:justify-center text-light-100 lg:rounded-3xl gap-y-3 sm:gap-y-5 md:gap-y-10 bg-dark-900"
       >
         {/* Video Background */}
         <video
           ref={videoRef}
           src="/video/just-do-it.mp4"
-          className="absolute inset-0 object-cover object-center w-full h-full rounded-3xl"
+          className="absolute inset-0 object-cover object-center w-full h-full rounded lg:rounded-3xl"
           muted
           autoPlay
           playsInline
         />
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/50 rounded-3xl" />
+        <div className="absolute inset-0 rounded bg-black/50 lg:rounded-3xl" />
+
         <svg
-          width={250}
-          height={80}
-          viewBox={`0 0 82 31`}
+          viewBox="0 0 82 31"
           fill="none"
-          className="z-10"
+          className="z-10 w-[160px] h-[50px] sm:w-[200px] sm:h-[60px] md:w-[250px] md:h-[80px]"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
@@ -174,17 +232,19 @@ function JustDoIt() {
             fill="transparent"
           />
         </svg>
+
         <h3
           ref={textRef}
-          className="text-heading-1 leading-[3.5rem] uppercase text-center pointer-events-none futura"
+          className="text-heading sm:text-heading-2 md:text-heading-1 leading-[3.5rem] uppercase text-center pointer-events-none futura"
         >
           JUST DO IT.
         </h3>
+
         <MagneticButton
           ref={ctaRef}
           variant="light"
           size="lg"
-          className="uppercase"
+          className="z-20 uppercase"
         >
           Shop Now
         </MagneticButton>

@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/_lib/authOptions";
 import { UpdatePayload } from "@/account/_components/AccountDetails";
+import { uploadToCloudinary } from "@/_lib/cloudinary";
 
 export async function updateAccountAction(
   formData: UpdatePayload,
@@ -23,15 +24,20 @@ export async function updateAccountAction(
     updates.name = formData.name;
   }
 
-  // ✅ Update image
-  if (formData.image && formData.image !== user.image) {
-    updates.image = formData.image;
+  if (formData.image) {
+    try {
+      const imageSrc = await uploadToCloudinary(formData.image);
+
+      updates.image = imageSrc;
+    } catch (err) {
+      console.error("Cloudinary upload error:", err);
+      throw new Error("Image upload failed" + err);
+    }
   }
 
   // ✅ Password update
   if (formData.newPassword) {
     if (user.password) {
-      // case 1: user already has a password → check oldPassword
       if (!formData.oldPassword) {
         throw new Error("Old password required");
       }
@@ -41,7 +47,6 @@ export async function updateAccountAction(
 
       updates.password = await bcrypt.hash(formData.newPassword, 10);
     } else {
-      // case 2: social user (no password in db) → allow creating one
       updates.password = await bcrypt.hash(formData.newPassword, 10);
     }
   }

@@ -15,14 +15,14 @@ function TrendingCard({
   return (
     <div
       className={`relative rounded 
-        ${index === 0 ? "h-[490px] sm:col-span-2" : "h-[390px] sm:row-start-2"} 
+        ${index === 0 ? "h-[390px] lg:h-[490px] sm:col-span-2" : "h-[390px] sm:row-start-2"} 
        `}
     >
       {/* Overlay */}
       <div
         className={`absolute inset-0 z-10 flex items-center justify-center w-full h-full transition-all duration-300 rounded overlay ${
           index === 0
-            ? "bg-gradient-to-r from-black/70 to-80% to-transparent"
+            ? "bg-gradient-to-t lg:bg-gradient-to-r from-black/70 lg:to-80% to-transparent"
             : "bg-gradient-to-t from-black/70 to-transparent"
         } `}
       />
@@ -36,12 +36,12 @@ function TrendingCard({
         className="object-cover object-center rounded"
       />
 
-      <div className="relative z-20 flex flex-col justify-center h-full p-10 mt-auto text-white w-fit gap-y-3">
-        <h3 className="text-heading-2">{title}</h3>
+      <div className="relative z-20 flex flex-col justify-end h-full p-10 mt-auto text-white lg:justify-center w-fit gap-y-3">
+        <h3 className="text-heading lg:text-heading-2">{title}</h3>
         <p
           className={`${
             title ? "text-light-400" : "mt-auto text-light-100"
-          } text-lead `}
+          } text-caption lg:text-lead `}
         >
           {description}
         </p>

@@ -15,9 +15,9 @@ const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
 };
 
 const sizes: Record<NonNullable<ButtonProps["size"]>, string> = {
-  sm: "px-4 py-2 text-body-medium",
-  md: "px-6 py-3.5 text-body-medium",
-  lg: "px-8 py-4 text-body-medium uppercase futura",
+  sm: "px-3 py-2 text-caption md:px-4 md:py-2 md:text-body-medium",
+  md: "px-4 py-3 text-caption md:px-6 md:py-3.5 md:text-body-medium",
+  lg: "px-4 py-2 text-caption md:px-8 md:py-4 md:text-body-medium uppercase futura",
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(

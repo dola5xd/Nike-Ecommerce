@@ -47,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${futuraExtraBold.variable} antialiased min-h-dvh min-w-screen overflow-x-hidden ${HelveticaNow.className}`}
+        className={`${futuraExtraBold.variable} antialiased overflow-x-hidden ${HelveticaNow.className}`}
       >
         <Providers>{children}</Providers>
       </body>

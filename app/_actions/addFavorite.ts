@@ -7,7 +7,6 @@ import { randomUUID } from "crypto";
 import { getServerSession } from "next-auth";
 
 export const addFavorite = async (favoriteData: Partial<favoriteItem>) => {
-  // favoriteData: { productID, id }
   try {
     const user = (await getServerSession(authOptions))?.user;
     if (!user) throw new Error("No user loggedIn!");
@@ -26,10 +25,10 @@ export const addFavorite = async (favoriteData: Partial<favoriteItem>) => {
     );
 
     if (existingIndex > -1) {
-      // ✅ Item exists → remove it from array
+      // Item exists → remove it from array
       currentFavorites = currentFavorites.filter((_, i) => i !== existingIndex);
     } else {
-      // ✅ Add new item
+      //  Add new item
       const newItem: favoriteItem = {
         id: randomUUID(), // unique ID
         productID: favoriteData.productID!,

@@ -22,13 +22,14 @@ import { Button } from "@/_components/ui/button";
 import { getUser } from "@/_actions/getUser";
 import { useRouter } from "next/navigation";
 import { ScrollArea } from "@/_components/ui/scroll-area";
+import { useSession } from "next-auth/react";
 
 export type UpdatePayload = {
   email: string;
   oldPassword?: string;
   name?: string;
   newPassword?: string;
-  image?: string | null;
+  image?: File;
 };
 
 // ✅ Validation schema
@@ -57,7 +58,9 @@ const schema = z
 type FormValues = z.infer<typeof schema>;
 
 function AccountDetails({ user }: { user: userDetail }) {
+  const { update } = useSession();
   const [preview, setPreview] = useState<string | null>(user.image ?? null);
+  const [file, setFile] = useState<File | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -81,7 +84,7 @@ function AccountDetails({ user }: { user: userDetail }) {
         if (formData.name !== user.name) payload.name = formData.name;
         if (formData.password && formData.password.trim() !== "")
           payload.newPassword = formData.password;
-        if (preview !== user.image) payload.image = preview;
+        if (file) payload.image = file;
 
         if (hasPassword) {
           if (!formData.currentPassword) {
@@ -111,6 +114,7 @@ function AccountDetails({ user }: { user: userDetail }) {
           confirmPassword: "",
         });
         setPreview(freshUser.image ?? null);
+        await update();
         router.refresh();
       } catch (err) {
         const errorMessage =
@@ -122,11 +126,15 @@ function AccountDetails({ user }: { user: userDetail }) {
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+
+    setFile(selectedFile);
+
+    // For preview only
     const reader = new FileReader();
     reader.onloadend = () => setPreview(reader.result as string);
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(selectedFile);
   };
 
   return (
@@ -139,11 +147,14 @@ function AccountDetails({ user }: { user: userDetail }) {
           {/* Avatar */}
           <div className="flex items-center gap-4">
             <Image
-              src={preview ?? "/default-avatar.png"}
+              src={
+                preview ??
+                `https://avatar.iran.liara.run/username?username=${user.name}`
+              }
               alt="Profile"
               height={100}
               width={100}
-              className="rounded-full object-cover border"
+              className="rounded-full object-cover aspect-square border"
             />
             <Input type="file" accept="image/*" onChange={handleImageUpload} />
           </div>

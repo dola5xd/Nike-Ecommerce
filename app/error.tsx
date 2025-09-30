@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/_components/ui/Button";
 
 export default function Error({ reset }: { reset: () => void }) {
   return (

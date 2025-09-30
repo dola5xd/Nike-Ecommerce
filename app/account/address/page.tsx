@@ -2,7 +2,7 @@ import { authOptions } from "@/_lib/authOptions";
 import { getServerSession } from "next-auth";
 import { AddressForm } from "@/_components/ui/AddressDialog";
 import { AddressCard } from "../_components/AddressCard";
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/_components/ui/Button";
 import AddNewAddress from "../_components/AddNewAddress";
 
 async function Page() {

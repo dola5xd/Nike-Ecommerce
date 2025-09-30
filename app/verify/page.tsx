@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/_components/ui/button";
 import { useSession } from "next-auth/react";
 import TextSlider from "@/_components/ui/TextSlider";
 import Logo from "@/_components/ui/Logo";
+import { Button } from "@/_components/ui/Button";
 
 export default function VerifyPage() {
   const { data: session } = useSession();

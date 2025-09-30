@@ -3,7 +3,7 @@
 import { useState } from "react";
 import PaymentDialog from "./PaymentDialog";
 import AddressDialog, { AddressForm } from "./AddressDialog";
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/_components/ui/Button";
 import { user } from "@/_types/user";
 import { SavedCard } from "@/_actions/getSavedCards";
 import toast from "react-hot-toast";

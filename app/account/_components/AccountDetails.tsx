@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/_components/ui/form";
 import { Input } from "@/_components/ui/input";
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/_components/ui/Button";
 
 export type UpdatePayload = {
   email: string;

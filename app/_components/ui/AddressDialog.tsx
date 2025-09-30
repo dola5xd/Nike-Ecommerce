@@ -12,7 +12,7 @@ import {
   DialogTrigger,
   DialogDescription,
 } from "@/_components/ui/dialog";
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/_components/ui/Button";
 import { Plus } from "lucide-react";
 import * as z from "zod";
 import { ScrollArea } from "./scroll-area";

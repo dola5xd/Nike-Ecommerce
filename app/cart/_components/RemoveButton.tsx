@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/_components/ui/Button";
 import { Trash2 } from "lucide-react";
 import { deleteCartItem } from "@/_actions/deleteCartItem";
 import { useTransition } from "react";

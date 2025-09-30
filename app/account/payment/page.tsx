@@ -1,5 +1,5 @@
 import { getSavedCards, SavedCard } from "@/_actions/getSavedCards";
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/_components/ui/Button";
 import { authOptions } from "@/_lib/authOptions";
 import { user } from "@/_types/user";
 import { getServerSession } from "next-auth";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/_components/ui/Button";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { updatePaymentAction } from "@/_actions/uptadeUserPaymentId";
 import toast from "react-hot-toast";

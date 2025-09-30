@@ -1,7 +1,7 @@
 "use client";
 
 import { SavedCard } from "@/_actions/getSavedCards";
-import { Button } from "@/_components/ui/button";
+import { Button } from "@/_components/ui/Button";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaCcVisa, FaCcMastercard, FaCcAmex } from "react-icons/fa";
 import toast from "react-hot-toast";

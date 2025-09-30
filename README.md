@@ -30,7 +30,7 @@
 
 ```bash
 # Clone project
-git clone https://github.com/your-username/nike-shoes.git
+git clone https://github.com/dola5xd/Nike-Ecommerce
 cd nike-shoes
 
 # Install dependencies

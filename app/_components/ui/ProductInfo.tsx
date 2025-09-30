@@ -2,7 +2,7 @@
 import SizesBox from "@/_components/ui/SizesBox";
 import { ProductDetail } from "@/_types/product";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { Button } from "./button";
+import { Button } from "@/_components/ui/button";
 import { IoIosArrowDown } from "react-icons/io";
 import { useState, useMemo } from "react";
 import Stars from "@/_components/ui/Stars";

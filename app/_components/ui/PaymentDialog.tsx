@@ -18,7 +18,7 @@ import { BsCash } from "react-icons/bs";
 import { user } from "@/_types/user";
 import { SavedCard } from "@/_actions/getSavedCards";
 import { useRouter } from "next/navigation";
-import { Button } from "./button";
+import { Button } from "@/_components/ui/button";
 import { ScrollArea } from "./scroll-area";
 import { FaCircleCheck } from "react-icons/fa6";
 

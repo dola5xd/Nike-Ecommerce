@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/_lib/authOptions";
 import AccountDropdown from "../ui/accountDropdown";
 import { user } from "@/_types/user";
-import { Button } from "../ui/button";
+import { Button } from "@/_components/ui/button";
 import { IoCartOutline } from "react-icons/io5";
 
 async function Header() {

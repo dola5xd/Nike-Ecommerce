@@ -14,9 +14,9 @@ function SizesBox({
   setSelectedSize: Dispatch<SetStateAction<number>>;
 }) {
   return (
-    <div className="flex flex-col gap-y-4">
-      <h4 className="font-semibold">Select Size</h4>
-      <div className="flex flex-wrap gap-x-3 gap-y-4">
+    <div className="flex flex-col py-2 gap-y-2 md:gap-y-4 md:py-0">
+      <h4 className="font-semibold text-caption">Select Size</h4>
+      <div className="flex flex-wrap justify-center md:justify-normal gap-x-3 gap-y-4">
         {AllSize.map((size) => {
           const isAvailable = sizes.includes(size.toString());
           const isSelected = selectedSize === size;

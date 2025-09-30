@@ -15,21 +15,22 @@ function RemoveButton({ itemID }: { itemID: string }) {
       const res = await deleteCartItem(itemID);
       if (res.success) {
         toast.success("Item removed from cart");
-        router.refresh(); // ⬅️ refresh cart list
+        router.refresh();
       } else {
         toast.error(res.error || "Failed to remove");
       }
     });
   };
+
   return (
     <Button
-      className="absolute bottom-7 right-7 cursor-pointer z-1"
+      className="absolute top-5 right-5 md:bottom-7 md:right-7 "
       variant={"destructive"}
       size={"icon"}
       disabled={isPending}
       onClick={handleDelete}
     >
-      <Trash2 />
+      <Trash2 size={18} />
     </Button>
   );
 }

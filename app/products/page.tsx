@@ -17,15 +17,16 @@ async function Page({ searchParams }: PageProps) {
   const products: Product[] = await client.fetch(PRODUCTS_QUERY, where);
 
   return (
-    <section className="min-h-dvh grid grid-cols-5 gap-6 p-6">
+    <section className="min-h-dvh grid grid-cols-1 lg:grid-cols-5 gap-6 p-4 md:p-6">
       <Filter />
-      <div className="col-span-4 grid grid-cols-3 gap-6">
+
+      <div className="md:col-span-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
         {products.length > 0 ? (
           products.map((product) => (
             <ProductCard product={product} key={product._id} />
           ))
         ) : (
-          <p className="text-center text-heading-3 col-span-3 mt-20 text-gray-500">
+          <p className="text-center text-heading-3 col-span-full mt-20 text-gray-500">
             No products found.
           </p>
         )}

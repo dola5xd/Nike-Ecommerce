@@ -76,7 +76,7 @@ export default function TextSlider({
         ref={textRef}
         className={`${
           variant === "dark" ? "text-dark-900" : "text-light-300"
-        } max-w-md  text-body `}
+        } text-caption max-w-md  lg:text-body min-h-[75px]`}
       />
 
       {/* dots */}

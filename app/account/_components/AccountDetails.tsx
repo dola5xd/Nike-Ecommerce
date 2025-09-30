@@ -8,6 +8,9 @@ import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { userDetail } from "@/_types/user";
 import { updateAccountAction } from "@/_actions/uptadeAccount";
+import { getUser } from "@/_actions/getUser";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import {
   Form,
@@ -19,10 +22,6 @@ import {
 } from "@/_components/ui/form";
 import { Input } from "@/_components/ui/input";
 import { Button } from "@/_components/ui/button";
-import { getUser } from "@/_actions/getUser";
-import { useRouter } from "next/navigation";
-import { ScrollArea } from "@/_components/ui/scroll-area";
-import { useSession } from "next-auth/react";
 
 export type UpdatePayload = {
   email: string;
@@ -32,7 +31,6 @@ export type UpdatePayload = {
   image?: File;
 };
 
-// ✅ Validation schema
 const schema = z
   .object({
     name: z.string().min(2, "Name is too short"),
@@ -96,17 +94,20 @@ function AccountDetails({ user }: { user: userDetail }) {
           }
           payload.oldPassword = formData.currentPassword;
         }
+        const hasUpdates = Object.keys(payload).length > 1;
 
+        if (!hasUpdates) {
+          toast.error("No changes to update");
+          return;
+        }
         const toastId = toast.loading("Updating account...");
         await updateAccountAction(payload, user);
 
-        // 🔄 fetch fresh user from Firestore
         const freshUser = await getUser(user.id);
 
         toast.dismiss(toastId);
         toast.success("Profile updated successfully");
 
-        // ✅ reset form with fresh data
         form.reset({
           name: freshUser.name ?? "",
           currentPassword: "",
@@ -131,133 +132,130 @@ function AccountDetails({ user }: { user: userDetail }) {
 
     setFile(selectedFile);
 
-    // For preview only
     const reader = new FileReader();
     reader.onloadend = () => setPreview(reader.result as string);
     reader.readAsDataURL(selectedFile);
   };
 
   return (
-    <ScrollArea className="max-h-[320px] pr-4">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 px-10 max-w-2xl mx-auto"
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full max-w-2xl px-4 mx-auto space-y-6 md:px-0"
+      >
+        {/* Avatar */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <Image
+            src={
+              preview ??
+              `https://avatar.iran.liara.run/username?username=${user.name}`
+            }
+            alt="Profile"
+            height={100}
+            width={100}
+            className="object-cover border rounded-full aspect-square"
+          />
+          <Input type="file" accept="image/*" onChange={handleImageUpload} />
+        </div>
+
+        {/* Email */}
+        <FormItem>
+          <FormLabel>Email</FormLabel>
+          <Input
+            type="email"
+            value={user.email}
+            disabled
+            className="cursor-not-allowed bg-muted"
+          />
+        </FormItem>
+
+        {/* Name */}
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Current Password */}
+        <FormField
+          control={form.control}
+          name="currentPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Current Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder={
+                    hasPassword
+                      ? "Enter current password"
+                      : "Social account - create password!"
+                  }
+                  {...field}
+                  disabled={!hasPassword}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* New Password */}
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>New Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Enter new password"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Confirm Password */}
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Confirm password"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          size="lg"
+          disabled={isPending}
         >
-          {/* Avatar */}
-          <div className="flex items-center gap-4">
-            <Image
-              src={
-                preview ??
-                `https://avatar.iran.liara.run/username?username=${user.name}`
-              }
-              alt="Profile"
-              height={100}
-              width={100}
-              className="rounded-full object-cover aspect-square border"
-            />
-            <Input type="file" accept="image/*" onChange={handleImageUpload} />
-          </div>
-
-          {/* Email */}
-          <FormItem>
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="email"
-              value={user.email}
-              disabled
-              className="bg-muted cursor-not-allowed"
-            />
-          </FormItem>
-
-          {/* Name */}
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Current Password */}
-          <FormField
-            control={form.control}
-            name="currentPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Current Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder={
-                      hasPassword
-                        ? "Enter current password"
-                        : "Social account - create password!"
-                    }
-                    {...field}
-                    disabled={!hasPassword}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* New Password */}
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>New Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter new password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Confirm Password */}
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Confirm password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button
-            type="submit"
-            className="w-full cursor-pointer"
-            size={"lg"}
-            disabled={isPending}
-          >
-            {isPending ? "Saving..." : "Save Changes"}
-          </Button>
-        </form>
-      </Form>
-    </ScrollArea>
+          {isPending ? "Saving..." : "Save Changes"}
+        </Button>
+      </form>
+    </Form>
   );
 }
 

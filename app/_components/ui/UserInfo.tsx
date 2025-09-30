@@ -62,7 +62,7 @@ function UserInfo({
   };
 
   return (
-    <div className="flex flex-col justify-center w-1/3 transition duration-300 bg-white rounded-lg shadow-sm outline outline-dark-700 p-7 gap-y-8">
+    <div className="flex flex-col justify-center w-full p-5 transition duration-300 bg-white rounded-lg shadow-sm outline outline-dark-500 md:p-7 gap-y-8">
       <div className="text-center">
         <h2 className="font-semibold text-heading-3">We’ll Bring It to You!</h2>
         <p className="text-caption text-dark-700">

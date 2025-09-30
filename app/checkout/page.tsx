@@ -15,11 +15,16 @@ async function page() {
     | [];
 
   return (
-    <main className="max-h-dvh">
+    <main className="min-h-screen bg-gray-50">
       <Header />
-      <section className="px-20 py-5 flex gap-x-7 h-[calc(100vh-80px)]">
-        <Invoice cart={cart} />
-        <UserInfo savedCards={savedCards} user={user} />
+      <section className="flex flex-col px-4 py-5 md:px-10 xl:px-20 lg:flex-row gap-7">
+        <div className="w-full lg:w-2/3">
+          <Invoice cart={cart} />
+        </div>
+
+        <div className="w-full lg:w-1/3">
+          <UserInfo savedCards={savedCards} user={user} />
+        </div>
       </section>
     </main>
   );

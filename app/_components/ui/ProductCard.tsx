@@ -45,10 +45,9 @@ function ProductCard({ product }: { product: Product }) {
 
       {/* Text Content */}
       <div className="flex flex-col text-body text-dark-700">
-        <h4 className="flex items-center justify-between text-black text-body-medium">
-          {product.title}
-          <span>${product.price.toFixed(2)}</span>
-        </h4>
+        <span className="flex items-center justify-between text-black text-body-medium">
+          <h4>{product.title}</h4>${product.price.toFixed(2)}
+        </span>
         <h5>{product.subtitle}</h5>
         {product.meta && <h6>{product.meta}</h6>}
       </div>

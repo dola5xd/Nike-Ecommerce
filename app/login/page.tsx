@@ -7,7 +7,7 @@ import LoginForm from "../_components/ui/LoginForm";
 function Page() {
   return (
     <main className="flex flex-row-reverse items-start w-screen h-dvh">
-      <section className="flex flex-col items-center justify-between w-1/2 h-full px-10 py-10 ">
+      <section className="flex-col items-center justify-between hidden w-1/2 h-full px-10 py-10 md:flex">
         <Link
           href={"/"}
           className="flex items-center justify-center p-2 bg-dark-900 rounded-xl w-fit"
@@ -15,39 +15,39 @@ function Page() {
           <Logo color="#fff" height={40} width={40} />
         </Link>
 
-        <div className="flex flex-col items-center gap-y-4 text-center">
+        <div className="space-y-4 text-center md:text-start">
           <h1 className="uppercase text-heading-2 futura">Just Do It.</h1>
           <TextSlider />
         </div>
 
-        <span className="text-caption text-dark-700">
+        <span className="text-footnote lg:text-caption text-dark-700">
           © {new Date().getFullYear()} Nike. All rights reserved.
         </span>
       </section>
 
-      <section className="flex flex-col items-center gap-y-5 w-1/2 h-full p-10 bg-dark-900 text-light-100">
-        <div className="flex flex-col items-center gap-y-5">
-          <p className="text-body text-light-100">
+      <section className="flex flex-col items-center justify-between w-full h-full px-10 md:justify-center gap-y-4 md:w-1/2 py-7 bg-dark-900 text-light-100">
+        <div className="flex flex-col items-center justify-between w-full text-center h-1/2 lg:max-w-md md:justify-center md:h-auto lg:text-start gap-y-3">
+          <p className="md:text-caption lg:text-body text-caption sm:text-body text-light-100">
             Don’t have an account?
             <Link
               href={"/register"}
-              className="ml-1 underline text-light-400 text-body-medium"
+              className="ml-1 font-medium underline text-light-400 text-caption md:text-caption lg:text-body-medium sm:text-body-medium"
             >
               Sign Up
             </Link>
           </p>
 
           <div className="flex flex-col items-center space-y-2">
-            <h2 className="text-3xl uppercase text-heading-2 futura">
+            <h2 className="uppercase text-heading-3 sm:text-heading md:text-heading-3 lg:text-heading futura">
               Welcome Back!
             </h2>
-            <h5 className="text-body text-light-10">
+            <h5 className="text-footnote sm:text-body md:text-footnote lg:text-caption text-light-10">
               Log in to continue your fitness journey
             </h5>
           </div>
 
           {/* Social Login Buttons */}
-          <div className="flex flex-col items-center w-full gap-y-3">
+          <div className="flex flex-col items-center w-full gap-y-4 lg:gap-y-3">
             <SignButtons variant="dark" />
           </div>
 
@@ -60,7 +60,7 @@ function Page() {
 
         <LoginForm />
 
-        <p className="text-dark-700 text-caption">
+        <p className="text-center text-dark-700 text-footnote lg:text-start lg:text-caption">
           By logging in, you agree to our{" "}
           <Link href={"#"} className="underline">
             Terms of Service

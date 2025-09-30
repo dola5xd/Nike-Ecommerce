@@ -18,16 +18,19 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
     favorites?.findIndex((product) => product.productID === _id) > -1;
 
   const suggestProducts = await getProductSuggest(_id, gender);
-
+  console.log(suggestProducts);
   return (
-    <main className="min-h-[200dvh] flex flex-col gap-y-20 px-10 py-7">
-      <section className="grid grid-cols-2 h-full w-full gap-2">
+    <main className="flex flex-col px-4 lg:min-h-screen lg:gap-y-16 sm:px-6 lg:px-10 py-7">
+      {/* Product detail section */}
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <Thumbnails images={images} title={title} description={description} />
         <ProductInfo product={product} isFavorite={isFavorite} />
       </section>
+
+      {/* Suggested products */}
       {suggestProducts && (
         <section className="py-7 space-y-7">
-          <h2 className="text-heading-3 uppercase futura">
+          <h2 className="uppercase text-heading-3 futura">
             You Might Also Like:
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

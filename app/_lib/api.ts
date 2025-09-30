@@ -29,10 +29,10 @@ export const getProductByName = async (slug: string) => {
 export const getProductSuggest = async (id: string, gender: string) => {
   try {
     const products = await client.fetch(productQueryGender, { id, gender });
+    if (products.length < 3) return products as Product[];
 
     // shuffle them
     const shuffled = [...products].sort(() => Math.random() - 0.5);
-
     // return 3 random
     return shuffled.slice(0, 3) as Product[];
   } catch (err) {

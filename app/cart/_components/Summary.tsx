@@ -17,35 +17,43 @@ async function Summary({ cart }: { cart: CartItemType[] }) {
   const total = subtotal + delivery;
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <h2 className="text-heading-3">Summary</h2>
-      <div className="flex flex-col gap-y-4">
-        <h4 className="text-body flex items-center justify-between">
-          Subtotal{" "}
-          <span className="text-body-medium">
-            ${subtotal ? subtotal.toFixed(2) : " -----"}
+    <div className="flex flex-col p-6 border shadow-sm gap-y-5 rounded-xl bg-light-100">
+      <h2 className="font-semibold text-heading-3">Summary</h2>
+
+      <div className="space-y-3 text-sm">
+        <div className="flex justify-between">
+          <span>Subtotal</span>
+          <span className="font-medium">
+            ${subtotal ? subtotal.toFixed(2) : "0.00"}
           </span>
-        </h4>
-        <h5 className="text-body flex items-center justify-between">
-          Estimated Delivery & Handling{" "}
-          <span className="text-body-medium">${delivery.toFixed(2)}</span>
-        </h5>
-        <hr className="w-full" />
-        <h6 className="text-body-medium flex items-center justify-between">
-          Total{" "}
-          <span>${total !== delivery ? total.toFixed(2) : " ------"}</span>
-        </h6>
-        <hr className="w-full" />
-        {cart.length > 0 ? (
-          <Link href={"/checkout"}>
-            <Button className="w-full">Proceed to Checkout</Button>
-          </Link>
-        ) : (
-          <Link href={"/products"}>
-            <Button className="w-full">Proceed to products</Button>
-          </Link>
-        )}
+        </div>
+
+        <div className="flex justify-between">
+          <span>Delivery</span>
+          <span className="font-medium">${delivery.toFixed(2)}</span>
+        </div>
+
+        <hr />
+
+        <div className="flex justify-between text-base font-semibold">
+          <span>Total</span>
+          <span>${total.toFixed(2)}</span>
+        </div>
       </div>
+
+      {cart.length > 0 ? (
+        <Link href="/checkout">
+          <Button className="w-full py-3 rounded-full">
+            Proceed to Checkout
+          </Button>
+        </Link>
+      ) : (
+        <Link href="/products">
+          <Button className="w-full py-3 rounded-full">
+            Continue Shopping
+          </Button>
+        </Link>
+      )}
     </div>
   );
 }

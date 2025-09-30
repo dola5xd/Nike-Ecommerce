@@ -170,7 +170,6 @@ function DiscoverMore() {
       ref={containerRef}
       className="relative flex flex-col lg:flex-row items-center w-full px-5 py-16 lg:px-0 lg:pl-5 lg:py-20 xl:py-0 lg:min-h-[80vh] xl:min-h-screen overflow-hidden bg-gradient-to-b md:bg-gradient-to-br via-white to-90% to-[#FF8342] xl:bg-none"
     >
-      {/* Left Content */}
       <div className="flex flex-col items-start xl:w-1/2 gap-y-6">
         <span ref={labelRef} className="text-caption lg:text-lead text-red">
           Bold & Sporty
@@ -195,7 +194,6 @@ function DiscoverMore() {
         </Link>
       </div>
 
-      {/* Right Content */}
       <div className="relative flex items-center justify-center w-full h-64 overflow-hidden xl:w-2/3 sm:h-80 lg:h-screen">
         {/* SVG Background */}
         <span className="absolute inset-0 items-center justify-center hidden lg:flex -z-20">

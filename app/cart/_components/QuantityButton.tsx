@@ -12,7 +12,7 @@ function QuantityButton({ cartItem }: { cartItem: CartItemType }) {
   const router = useRouter();
 
   const updateQuantity = (newQuantity: number) => {
-    if (newQuantity < 1) return; // prevent 0 or negative
+    if (newQuantity < 1) return;
 
     setQuantity(newQuantity);
 
@@ -24,34 +24,32 @@ function QuantityButton({ cartItem }: { cartItem: CartItemType }) {
       );
       if (res.success) {
         toast.success("Quantity updated!");
-        router.refresh(); // ⬅️ forces server component re-render
+        router.refresh();
       } else {
-        toast.error(res.error ?? "Something Gone wrong");
+        toast.error(res.error ?? "Something went wrong");
       }
     });
   };
 
   return (
-    <div className="w-fit py-1.5 rounded-full px-3 flex items-center gap-x-3 bg-light-200">
-      Quantity
+    <div className="flex items-center gap-3 px-4 py-2 text-sm rounded-full bg-light-200">
+      <span className="text-dark-700">Qty</span>
       <button
         type="button"
-        title="Decrement Quantity"
-        className="cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+        className="p-1 disabled:opacity-40"
         disabled={quantity <= 1 || isPending}
         onClick={() => updateQuantity(quantity - 1)}
       >
-        <Minus />
+        <Minus size={16} />
       </button>
-      <span>{quantity}</span>
+      <span className="font-medium">{quantity}</span>
       <button
         type="button"
-        title="Increment Quantity"
-        className="cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+        className="p-1 disabled:opacity-40"
         disabled={isPending}
         onClick={() => updateQuantity(quantity + 1)}
       >
-        <Plus />
+        <Plus size={16} />
       </button>
     </div>
   );

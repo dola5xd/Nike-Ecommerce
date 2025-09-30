@@ -9,6 +9,7 @@ import Button from "./OrignalButton";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { Input } from "./input";
 
 const registerSchema = z.object({
   name: z.string().min(1, "Full name is required"),
@@ -59,7 +60,6 @@ export default function RegisterForm() {
 
       toast.success("Account created successfully!");
 
-      // Optionally, auto-login but redirect to verify page
       await signIn("credentials", {
         redirect: true,
         email: data.email,
@@ -76,22 +76,23 @@ export default function RegisterForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col w-full gap-4 max-w-1/2"
+      className="flex flex-col w-full gap-4 xl:px-20"
       noValidate
     >
       {/* Full Name */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="name" className="text-body-medium text-dark-900">
+        <label
+          htmlFor="name"
+          className="text-caption md:text-body-medium text-dark-900"
+        >
           Full Name
         </label>
-        <input
+        <Input
           id="name"
           type="text"
           placeholder="Enter your full name"
           {...register("name")}
-          className="w-full rounded-xl bg-transparent px-2 py-3 text-sm 
-            placeholder:text-dark-700 outline-1 border border-light-300 
-            focus:border-dark-500 transition-all"
+          className="w-full px-2 py-3 text-sm transition-all bg-transparent border placeholder:text-dark-700 outline-1 border-light-300 focus:border-dark-500"
         />
         {errors.name && (
           <span className="text-xs text-rose-400">{errors.name.message}</span>
@@ -100,18 +101,19 @@ export default function RegisterForm() {
 
       {/* Email */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-body-medium text-dark-900">
+        <label
+          htmlFor="email"
+          className="text-caption md:text-body-medium text-dark-900"
+        >
           Email
         </label>
-        <input
+        <Input
           id="email"
           type="email"
           placeholder="account@gmail.com"
           autoComplete="email"
           {...register("email")}
-          className="w-full rounded-xl bg-transparent px-2 py-3 text-sm 
-            placeholder:text-dark-700 outline-1 border border-light-300 
-            focus:border-dark-500 transition-all"
+          className="w-full px-2 py-3 text-sm transition-all bg-transparent border placeholder:text-dark-700 outline-1 border-light-300 focus:border-dark-500"
         />
         {errors.email && (
           <span className="text-xs text-rose-400">{errors.email.message}</span>
@@ -120,19 +122,20 @@ export default function RegisterForm() {
 
       {/* Password */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-body-medium text-dark-900">
+        <label
+          htmlFor="password"
+          className="text-caption md:text-body-medium text-dark-900"
+        >
           Password
         </label>
         <div className="relative">
-          <input
+          <Input
             id="password"
             type={showPassword ? "text" : "password"}
             placeholder="Minimum 8 characters"
             autoComplete="new-password"
             {...register("password")}
-            className="w-full rounded-xl bg-transparent px-2 py-3 text-sm 
-              placeholder:text-dark-700 outline-1 border border-light-300 
-              focus:border-dark-500 transition-all"
+            className="w-full px-2 py-3 text-sm transition-all bg-transparent border placeholder:text-dark-700 outline-1 border-light-300 focus:border-dark-500"
           />
           <button
             type="button"

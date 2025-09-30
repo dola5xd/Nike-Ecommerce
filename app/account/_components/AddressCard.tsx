@@ -46,7 +46,7 @@ export function AddressCard({
       router.refresh();
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Something gone wrong";
+        err instanceof Error ? err.message : "Something went wrong";
       toast.error(errorMessage);
     }
   };
@@ -56,28 +56,31 @@ export function AddressCard({
       await removeAddress(index);
       toast.success("Address removed");
       router.refresh();
+      setOpen(false);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Something gone wrong";
+        err instanceof Error ? err.message : "Something went wrong";
       toast.error(errorMessage);
     }
   };
 
   return (
-    <div className="flex items-start justify-between p-4 border rounded-lg">
-      <div className="space-y-1.5">
+    <div className="flex flex-col gap-4 p-4 border rounded-lg md:flex-row md:items-start md:justify-between">
+      {/* Address Info */}
+      <div className="space-y-1.5 flex-1">
         <p className="font-semibold">{address.fullName}</p>
         <p>{address.street}</p>
         <p>
           {address.city}, {address.state} {address.zip}
         </p>
         <p className="flex items-center gap-1 text-sm">
-          <BsPhoneFill size={16} />{" "}
+          <BsPhoneFill size={16} />
           <span className="text-dark-700">{address.phone}</span>
         </p>
       </div>
 
-      <div className="flex gap-2">
+      {/* Actions */}
+      <div className="flex self-end gap-2 md:flex-col md:self-auto">
         <Button
           variant="outline"
           className="cursor-pointer"
@@ -96,28 +99,63 @@ export function AddressCard({
         </Button>
       </div>
 
+      {/* Edit Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Edit Address</DialogTitle>
             <DialogDescription>
-              let&apos;s eddit your address informations
+              Update your address information below.
             </DialogDescription>
           </DialogHeader>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-3"
           >
-            <Input {...register("fullName")} placeholder="Full Name" />
-            {errors.fullName && (
-              <p className="text-xs text-red-500">{errors.fullName.message}</p>
-            )}
+            <div>
+              <Input {...register("fullName")} placeholder="Full Name" />
+              {errors.fullName && (
+                <p className="text-xs text-red-500">
+                  {errors.fullName.message}
+                </p>
+              )}
+            </div>
 
-            <Input {...register("street")} placeholder="Street" />
-            <Input {...register("city")} placeholder="City" />
-            <Input {...register("state")} placeholder="State" />
-            <Input {...register("zip")} placeholder="ZIP" />
-            <Input {...register("phone")} placeholder="Phone" />
+            <div>
+              <Input {...register("street")} placeholder="Street" />
+              {errors.street && (
+                <p className="text-xs text-red-500">{errors.street.message}</p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <div>
+                <Input {...register("city")} placeholder="City" />
+                {errors.city && (
+                  <p className="text-xs text-red-500">{errors.city.message}</p>
+                )}
+              </div>
+              <div>
+                <Input {...register("state")} placeholder="State" />
+                {errors.state && (
+                  <p className="text-xs text-red-500">{errors.state.message}</p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <Input {...register("zip")} placeholder="ZIP" />
+              {errors.zip && (
+                <p className="text-xs text-red-500">{errors.zip.message}</p>
+              )}
+            </div>
+
+            <div>
+              <Input {...register("phone")} placeholder="Phone" />
+              {errors.phone && (
+                <p className="text-xs text-red-500">{errors.phone.message}</p>
+              )}
+            </div>
 
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Saving..." : "Save Changes"}

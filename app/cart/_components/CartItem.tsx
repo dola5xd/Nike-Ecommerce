@@ -3,7 +3,6 @@ import { CartItemType } from "@/_types/cart";
 import { urlFor } from "@/_utils/utils";
 import Image from "next/image";
 import QuantityButton from "./QuantityButton";
-
 import RemoveButton from "./RemoveButton";
 import Link from "next/link";
 
@@ -12,35 +11,40 @@ async function CartItem({ cartItem }: { cartItem: CartItemType }) {
   const { price, subtitle, title, image } = product;
   const { quantity, size } = cartItem;
 
-  const imageSrc = image
-    ? urlFor(image)?.height(170).width(170).format("webp").url()
-    : "";
+  const imageSrc = image ? urlFor(image)?.format("webp").url() : "";
 
   return (
-    <div className="relative flex items-center gap-x-7 w-full px-7">
+    <div className="relative flex flex-col items-start w-full gap-6 p-5 border sm:flex-row sm:items-center rounded-xl bg-light-100">
+      {/* Product Image */}
       <Image
         src={imageSrc!}
-        alt="title"
-        height={170}
-        width={170}
-        className="object-cover rounded"
+        alt={title}
+        height={250}
+        width={250}
+        className="object-cover rounded-lg w-full aspect-[1/1] sm:w-[170px] sm:h-[170px]"
       />
-      <div className="w-1/2 space-y-2">
-        <h2 className="text-lead hover:underline transition-all duration-500">
+
+      {/* Product Info */}
+      <div className="flex flex-col w-full gap-3">
+        <h2 className="font-semibold transition text-lead hover:underline">
           <Link href={`/product/${title.replaceAll(" ", "-")}`}>{title}</Link>
         </h2>
         <h3 className="text-body text-dark-700">{subtitle}</h3>
-        <div className="flex items-center gap-x-7">
-          <h4 className="text-body text-dark-700">
-            Size: <span className="text-body-medium text-dark-900">{size}</span>
-          </h4>
-          {/* quantaty */}
+
+        <div className="flex flex-wrap items-center gap-5">
+          <p className="text-body text-dark-700">
+            Size: <span className="font-medium text-dark-900">{size}</span>
+          </p>
           <QuantityButton cartItem={cartItem} />
         </div>
       </div>
-      <span className="ml-auto text-lead h-1/2">
-        $ {Number(quantity * price).toFixed(2)}
+
+      {/* Price */}
+      <span className="ml-auto font-semibold text-lead text-dark-900">
+        ${Number(quantity * price).toFixed(2)}
       </span>
+
+      {/* Remove */}
       <RemoveButton itemID={cartItem.id} />
     </div>
   );

@@ -5,14 +5,16 @@ import Tabs from "./_components/Tabs";
 
 function layout({ children }: { children: ReactNode }) {
   return (
-    <main className="min-h-dvh">
+    <main className="flex flex-col min-h-dvh">
       <Header />
-      <section className="h-[calc(100vh-160px)] flex flex-col w-screen gap-7 px-32 py-4">
-        <UserInfo />
-        <div className="grid items-start w-full grid-cols-5 gap-x-4">
+
+      <section className="flex flex-col flex-1 w-full gap-3 px-6 py-6 md:gap-10 lg:flex-row md:px-16">
+        <aside className="flex flex-col gap-6 lg:sticky lg:top-10 h-fit lg:w-1/4">
+          <UserInfo />
           <Tabs />
-          {children}
-        </div>
+        </aside>
+
+        <div className="flex-1 w-full">{children}</div>
       </section>
     </main>
   );

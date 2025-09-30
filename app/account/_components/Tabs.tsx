@@ -5,18 +5,28 @@ import { usePathname } from "next/navigation";
 
 function Tabs() {
   const pathName = usePathname();
+
   return (
-    <div className="flex flex-col justify-center h-full col-span-1 gap-4 text-center rounded outline outline-light-300">
-      {contentTabs.map((tab, i) => (
-        <Link
-          key={i}
-          className={`w-full rounded rounded-r-[40px]  px-6 py-6 text-body-medium transition-all duration-300 ${pathName.startsWith(`/account/${tab.value}`) ? "bg-dark-900  text-white hover:bg-light-300 hover:text-black" : "hover:bg-light-400"}`}
-          href={`/account/${tab.value}`}
-        >
-          {tab.title}
-        </Link>
-      ))}
-    </div>
+    <nav>
+      <div className="flex gap-2 pb-2 overflow-x-auto lg:flex-col lg:overflow-x-hidden scrollbar-hide md:justify-center">
+        {contentTabs.map((tab, i) => {
+          const active = pathName.startsWith(`/account/${tab.value}`);
+          return (
+            <Link
+              key={i}
+              href={`/account/${tab.value}`}
+              className={`px-4 py-3 text-footnote md:text-caption xl:text-body-medium whitespace-nowrap transition-all duration-300 rounded-md ${
+                active
+                  ? "bg-dark-900 text-white hover:bg-dark-700"
+                  : "text-gray-700 hover:bg-light-200"
+              }`}
+            >
+              {tab.title}
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
   );
 }
 

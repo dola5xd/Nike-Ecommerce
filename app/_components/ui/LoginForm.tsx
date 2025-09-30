@@ -9,8 +9,8 @@ import Button from "./OrignalButton";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { Input } from "./input";
 
-// ✅ Schema for login
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -43,7 +43,7 @@ export default function LoginForm() {
           toast.error(
             <>
               Please verify your email.{" "}
-              <Link href="/verify" className="underline text-blue-500">
+              <Link href="/verify" className="text-blue-500 underline">
                 Resend
               </Link>
             </>
@@ -53,7 +53,7 @@ export default function LoginForm() {
         }
       } else {
         toast.success("Welcome back!");
-        window.location.href = "/"; // redirect after login
+        window.location.href = "/";
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -64,7 +64,7 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col w-full gap-4 max-w-1/2"
+      className="flex flex-col w-full gap-4 lg:gap-6 xl:max-w-md"
       noValidate
     >
       {/* Email */}
@@ -73,13 +73,13 @@ export default function LoginForm() {
           Email
         </label>
 
-        <input
+        <Input
           id="email"
           type="email"
           placeholder="account@gmail.com"
           autoComplete="email"
           {...register("email")}
-          className="w-full rounded-xl bg-transparent px-3 py-3 text-sm placeholder:text-light-400 text-light-100 border border-dark-500 outline-none focus:border-light-100 transition-all"
+          className="px-3 py-3 lg:py-6 placeholder:text-light-400 text-light-100 border-dark-500 focus:border-light-100"
         />
         {errors.email && (
           <span className="text-xs text-rose-400">{errors.email.message}</span>
@@ -93,13 +93,13 @@ export default function LoginForm() {
         </label>
 
         <div className="relative">
-          <input
+          <Input
             id="password"
             type={showPassword ? "text" : "password"}
             placeholder="minimum 8 characters"
             autoComplete="current-password"
             {...register("password")}
-            className="w-full rounded-xl bg-transparent px-3 py-3 text-sm placeholder:text-light-400 text-light-100 border border-dark-500 outline-none focus:border-light-100 transition-all"
+            className="px-3 py-3 lg:py-6 placeholder:text-light-400 text-light-100 border-dark-500 focus:border-light-100"
           />
 
           <button

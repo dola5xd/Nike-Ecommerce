@@ -26,7 +26,7 @@ async function Header() {
       )}
 
       <header className="flex flex-col items-center px-4 py-3 mt-1 md:py-6 md:px-10 md:flex-row md:justify-between bg-light-100 gap-y-4">
-        <Link href={"/"} className="mt-1">
+        <Link href={"/"} aria-label="Go to homepage" className="mt-1">
           <Logo color="#000" height="22" width="62" />
         </Link>
 

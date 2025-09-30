@@ -30,8 +30,9 @@ export async function updateAccountAction(
 
       updates.image = imageSrc;
     } catch (err) {
-      console.error("Cloudinary upload error:", err);
-      throw new Error("Image upload failed" + err);
+      const errorMessage =
+        err instanceof Error ? err.message : "Something gone wrong!";
+      throw new Error(errorMessage);
     }
   }
 

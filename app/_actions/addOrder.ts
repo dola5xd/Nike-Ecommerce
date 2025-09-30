@@ -77,7 +77,6 @@ export const addOrder = async ({
       error instanceof Error
         ? error.message
         : "Something went wrong during checkout";
-    console.error(errorMessage);
     return { success: false, error: errorMessage };
   }
 };

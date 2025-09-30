@@ -36,7 +36,8 @@ export async function updateCartQuantity(
 
     return { success: true, cart: updatedCart };
   } catch (error) {
-    console.error("Error updating cart quantity:", error);
-    return { success: false, error: "Failed to update quantity" };
+    const errorMessage =
+      error instanceof Error ? error.message : "Something gone wrong!";
+    return { success: false, error: errorMessage };
   }
 }

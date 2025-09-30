@@ -47,10 +47,8 @@ export async function POST(req: Request) {
       message: "Verification email resent successfully",
     });
   } catch (err) {
-    console.error("Resend verification error:", err);
-    return NextResponse.json(
-      { error: "Failed to resend verification email" },
-      { status: 500 }
-    );
+    const errorMessage =
+      err instanceof Error ? err.message : "Something gone wrong!";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -16,12 +16,10 @@ export const getProductByName = async (slug: string) => {
     // 2) get product
     const product = await client.fetch(productQuery, { title });
 
-    // 3) return only product
     return product.at(0) as ProductDetail;
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : "Something gone wrong!";
-    console.error(errorMessage);
     throw new Error(errorMessage);
   }
 };
@@ -38,7 +36,6 @@ export const getProductSuggest = async (id: string, gender: string) => {
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : "Something gone wrong!";
-    console.error(errorMessage);
     throw new Error(errorMessage);
   }
 };
@@ -51,7 +48,6 @@ export const getProductByID = async (id: string) => {
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : "Something gone wrong!";
-    console.error(errorMessage);
     throw new Error(errorMessage);
   }
 };
@@ -64,7 +60,6 @@ export const getProductPrice = async (id: string) => {
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : "Something gone wrong!";
-    console.error(errorMessage);
     throw new Error(errorMessage);
   }
 };

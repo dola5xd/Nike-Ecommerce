@@ -56,8 +56,9 @@ export default function LoginForm() {
         window.location.href = "/";
       }
     } catch (err) {
-      console.error("Login error:", err);
-      toast.error("Something went wrong. Try again.");
+      const errorMessage =
+        err instanceof Error ? err.message : "Something gone wrong!";
+      toast.error(errorMessage);
     }
   };
 

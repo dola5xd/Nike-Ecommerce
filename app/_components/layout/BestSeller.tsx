@@ -18,8 +18,11 @@ async function BestSeller() {
           <ProductCard product={product} key={product._id} />
         ))}
       </div>
-      <Link href={"/shop"} className="self-center">
-        {" "}
+      <Link
+        href={"/products"}
+        aria-label="See more products"
+        className="self-center"
+      >
         <Button variant="dark" size="lg">
           See More <MdArrowOutward size={20} />
         </Button>

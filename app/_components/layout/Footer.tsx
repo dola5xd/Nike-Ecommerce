@@ -38,18 +38,21 @@ export default function Footer() {
         <div className="flex sm:justify-start md:justify-end items-center gap-3">
           <Link
             href="#"
+            aria-label="Visit our X profile"
             className="w-9 h-9 flex items-center justify-center rounded-full bg-light-200 text-dark-900 hover:scale-110 transition"
           >
             <SiX size={16} />
           </Link>
           <Link
             href="#"
+            aria-label="Visit our Facebook page"
             className="w-9 h-9 flex items-center justify-center rounded-full bg-light-200 text-dark-900 hover:scale-110 transition"
           >
             <FaFacebookF size={16} />
           </Link>
           <Link
             href="#"
+            aria-label="Visit our Instagram profile"
             className="w-9 h-9 flex items-center justify-center rounded-full bg-light-200 text-dark-900 hover:scale-110 transition"
           >
             <FaInstagram size={16} />

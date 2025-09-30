@@ -26,7 +26,8 @@ export async function deleteCartItem(itemId: string) {
 
     return { success: true, cart: updatedCart };
   } catch (err) {
-    console.error("Error deleting cart item:", err);
-    return { success: false, error: "Failed to delete cart item" };
+    const errorMessage =
+      err instanceof Error ? err.message : "Something gone wrong!";
+    return { success: false, error: errorMessage };
   }
 }

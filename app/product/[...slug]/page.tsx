@@ -18,7 +18,6 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
     favorites?.findIndex((product) => product.productID === _id) > -1;
 
   const suggestProducts = await getProductSuggest(_id, gender);
-  console.log(suggestProducts);
   return (
     <main className="flex flex-col px-4 lg:min-h-screen lg:gap-y-16 sm:px-6 lg:px-10 py-7">
       {/* Product detail section */}

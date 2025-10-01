@@ -8,6 +8,31 @@ import { searchParamsToWhere } from "@/_utils/utils";
 type PageProps = {
   searchParams: Promise<Record<string, string>>;
 };
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "All Nike Products | Nike E-commerce",
+  description:
+    "Browse our full collection of Nike shoes, sneakers, and apparel. Find the latest drops, best sellers, and exclusive deals.",
+  alternates: {
+    canonical: "https://nike-ecommerce-smoky.vercel.app/products",
+  },
+  openGraph: {
+    title: "All Nike Products | Nike E-commerce",
+    description:
+      "Explore Nike shoes, sneakers, and apparel. Shop the latest arrivals and best sellers.",
+    url: "https://nike-ecommerce-smoky.vercel.app/products",
+    siteName: "Nike E-commerce",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "All Nike Products | Nike E-commerce",
+    description:
+      "Browse Nike shoes, sneakers, and apparel online. Discover the latest arrivals and best sellers.",
+  },
+};
 
 async function Page({ searchParams }: PageProps) {
   const params = await searchParams;

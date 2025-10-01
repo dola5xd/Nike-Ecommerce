@@ -18,7 +18,7 @@ export async function sendVerificationEmail(email: string, token: string) {
     html: `
       <div style="font-family: futuraExtraBold, futuraExtraBold Fallback, Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background: #fff; border-radius: 12px; border: 1px solid #e5e5e5;">
         <div style="text-align: center; margin-bottom: 20px;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Logo_NIKE.svg/512px-Logo_NIKE.svg.png" 
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Logo_NIKE.svg/512px-Logo_NIKE.svg.webp" 
                alt="Nike Logo" 
                style="width: 100px;"/>
         </div>

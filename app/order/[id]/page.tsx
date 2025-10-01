@@ -6,6 +6,8 @@ import { getOrder } from "@/_actions/getOrder";
 import { ScrollArea } from "@/_components/ui/scroll-area";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/_lib/authOptions";
 
 const currency = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -17,6 +19,19 @@ export default async function OrderPage({
 }: {
   params: { id: string };
 }) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return (
+      <section className="flex flex-col items-center justify-center min-h-dvh">
+        <h1 className="text-2xl font-semibold text-gray-800">Unauthorized</h1>
+        <Link href={"/login"} className="mt-2 text-gray-500">
+          Let&apos;s login first!.
+        </Link>
+      </section>
+    );
+  }
+
   const orderID = params.id;
   const order = await getOrder(orderID);
 
@@ -78,7 +93,7 @@ export default async function OrderPage({
             {cartWithProducts.map((item) => {
               const img = item.product?.image
                 ? urlFor(item.product.image)?.format("webp").url()
-                : "/placeholder.png";
+                : "/placeholder.webp";
               const lineTotal = (item.product?.price || 0) * item.quantity;
 
               return (

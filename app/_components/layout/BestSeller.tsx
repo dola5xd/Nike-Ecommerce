@@ -23,7 +23,7 @@ async function BestSeller() {
         aria-label="See more products"
         className="self-center"
       >
-        <Button variant="dark" size="lg">
+        <Button variant="dark" size="lg" aria-label="See more products">
           See More <MdArrowOutward size={20} />
         </Button>
       </Link>

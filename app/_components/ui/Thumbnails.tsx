@@ -10,7 +10,7 @@ function Thumbnails({ images, title, description }: ThumbnailsProps) {
   const baseImages =
     images.length > 0
       ? images.map((img) => urlFor(img)?.url() ?? "")
-      : ["/placeholder.png"];
+      : ["/placeholder.webp"];
 
   const thumbnails =
     baseImages.length >= 7

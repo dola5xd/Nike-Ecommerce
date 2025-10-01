@@ -3,18 +3,18 @@ import TrendingCard from "../ui/TrendingCard";
 
 const trending: Trending[] = [
   {
-    imageUrl: "/trending-1.png",
+    imageUrl: "/trending-1.webp",
     title: "React Presto",
     description: "With React foam for the most comfortable Presto ever.",
     herf: "#",
   },
   {
-    imageUrl: "/trending-2.png",
+    imageUrl: "/trending-2.webp",
     description: "Air Jorden 11 Retro Low LE",
     herf: "#",
   },
   {
-    imageUrl: "/trending-3.png",
+    imageUrl: "/trending-3.webp",
     description: "Summer Must-Haves: Air Max Dia",
     herf: "#",
   },

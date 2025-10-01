@@ -5,6 +5,13 @@ import { MdArrowOutward } from "react-icons/md";
 import { Product } from "@/_types/product";
 import { urlFor } from "@/_utils/utils";
 
+const badgeStyles: Record<string, string> = {
+  green: "bg-green-100 text-green-800",
+  orange: "bg-orange-100 text-orange-800",
+  red: "bg-red-100 text-red-800",
+  default: "bg-gray-200 text-gray-900",
+};
+
 function ProductCard({ product }: { product: Product }) {
   const imageSrc = product.image
     ? urlFor(product.image)?.format("webp").url()
@@ -17,8 +24,9 @@ function ProductCard({ product }: { product: Product }) {
       {/* Badge */}
       {product.badge?.label && (
         <span
-          className="absolute z-10 top-3 left-3 rounded-full px-3 py-1.5 bg-gray-100 w-fit h-fit text-body-medium"
-          style={{ color: product.badge.tone }}
+          role="status"
+          aria-label={`Product badge: ${product.badge.label}`}
+          className={`inline-flex items-center justify-center rounded-full px-3 py-1.5 text-body-medium w-fit h-fit ${badgeStyles[product.badge.tone] || badgeStyles.default}`}
         >
           {product.badge.label}
         </span>

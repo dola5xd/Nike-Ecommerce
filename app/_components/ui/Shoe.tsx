@@ -112,13 +112,13 @@ function Shoe() {
       <div ref={floatRef} className="relative w-full">
         <div className="relative w-full aspect-[402/233]">
           <Image
-            src="/hero-shoe.png"
+            src="/hero-shoe.webp"
             alt="Nike Air Jordan shoe"
             fill
             priority
             sizes="(max-width: 640px) 90vw, (max-width: 1024px) 70vw, 70vw"
             className="object-contain select-none drop-shadow-xl"
-            onLoadingComplete={() => ScrollTrigger.refresh()}
+            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
       </div>

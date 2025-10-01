@@ -9,10 +9,6 @@ import Stripe from "stripe";
 import { AddressForm } from "@/_components/ui/AddressDialog";
 import { favoriteItem } from "@/_types/favorites";
 
-// ============================
-// 🔹 Helper: Upsert into "users" only
-// ============================
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 async function upsertUser(
@@ -30,12 +26,19 @@ async function upsertUser(
   const isOAuth = provider === "google" || provider === "twitter";
   const emailVerified = isOAuth ? true : false;
 
+  // Extract Twitter-specific fields
+  const twitterUsername =
+    provider === "twitter" ? ((profile?.username as string) ?? null) : null;
+  const twitterProfileUrl =
+    provider === "twitter" && twitterUsername
+      ? `https://twitter.com/${twitterUsername}`
+      : null;
+
   if (!snap.empty) {
-    // 🔹 Existing user
+    // Existing user
     const existingDoc = snap.docs[0];
     const userData = existingDoc.data() as userDetail;
 
-    // ✅ Ensure Stripe ID exists
     let stripeCustomerId = userData.stripeCustomerId;
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
@@ -54,6 +57,9 @@ async function upsertUser(
         image: user.image || userData.image || null,
         emailVerified: userData.emailVerified || emailVerified,
         provider,
+        twitterUsername: twitterUsername || userData.twitterUsername || null,
+        twitterProfileUrl:
+          twitterProfileUrl || userData.twitterProfileUrl || null,
         updatedAt: Date.now(),
         address: userData.address || [],
         favorites: userData.favorites || [],
@@ -62,11 +68,10 @@ async function upsertUser(
       { merge: true }
     );
   } else {
-    // 🔹 New user
+    // New user
     const newId = String(user.id || account?.providerAccountId || profile?.sub);
     if (!newId || newId === "undefined" || newId === "null") return;
 
-    // ✅ Create Stripe customer
     const customer = await stripe.customers.create({
       email: user.email,
       name: user.name ?? undefined,
@@ -86,22 +91,20 @@ async function upsertUser(
       address: [],
       favorites: [],
       stripeCustomerId: customer.id,
+      twitterUsername,
+      twitterProfileUrl,
     });
   }
 }
 
-// ============================
-// 🔹 Extend Session type
-// ============================
+//  Extend Session type
 declare module "next-auth" {
   interface Session {
     user: userDetail;
   }
 }
 
-// ============================
-// 🔹 Auth Options
-// ============================
+//  Auth Options
 export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET!,
 
@@ -141,7 +144,7 @@ export const authOptions: AuthOptions = {
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID!,
       clientSecret: process.env.TWITTER_CLIENT_SECRET!,
-      version: "2.0", // OAuth 2.0
+      version: "2.0",
     }),
   ],
 
@@ -185,6 +188,8 @@ export const authOptions: AuthOptions = {
           token.stripeCustomerId = userData.stripeCustomerId ?? null;
           token.address = userData.address ?? null;
           token.favorites = userData.favorites ?? null;
+          token.twitterUsername = userData.twitterUsername ?? null;
+          token.twitterProfileUrl = userData.twitterProfileUrl ?? null;
         }
       }
       return token;
@@ -200,6 +205,12 @@ export const authOptions: AuthOptions = {
         session.user.stripeCustomerId = token.stripeCustomerId as string;
         session.user.address = token.address as AddressForm[] | [];
         session.user.favorites = token.favorites as favoriteItem[] | [];
+
+        // Twitter info
+        session.user.twitterUsername = token.twitterUsername as string | null;
+        session.user.twitterProfileUrl = token.twitterProfileUrl as
+          | string
+          | null;
       }
       return session;
     },

@@ -34,11 +34,124 @@ function DiscoverMore() {
       !ButtonRef.current
     )
       return;
-
     const mm = gsap.matchMedia();
-
-    // … (GSAP timelines unchanged) …
-
+    mm.add("(max-width: 1024px)", () => {
+      const swooshTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top center",
+          toggleActions: "play none none reverse",
+        },
+      });
+      const headingSplit = new SplitText(headingRef.current, {
+        type: "words,chars",
+      });
+      const paraSplit = new SplitText(paragraphRef.current, { type: "words" });
+      const labelSplit = new SplitText(labelRef.current, { type: "words" });
+      swooshTl
+        .fromTo(
+          shoeRef.current,
+          { y: "-80vh", rotate: -15, scale: 0.6, opacity: 0 },
+          {
+            keyframes: [
+              { opacity: 0, ease: "none", duration: 0 },
+              { opacity: 1, ease: "power2.inOut", duration: 0.8 },
+              { y: 0, rotate: 0, scale: 1, ease: "power1.out" },
+            ],
+          }
+        )
+        .from(labelSplit.words, {
+          opacity: 0,
+          y: 15,
+          stagger: 0.04,
+          duration: 0.4,
+          ease: "power3.out",
+        })
+        .from(headingSplit.words, {
+          opacity: 0,
+          y: 30,
+          stagger: 0.03,
+          duration: 0.5,
+          ease: "power3.out",
+        })
+        .from(paraSplit.words, {
+          opacity: 0,
+          y: 15,
+          stagger: 0.02,
+          duration: 0.4,
+          ease: "power2.out",
+        })
+        .fromTo(
+          ButtonRef.current,
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
+        );
+    });
+    mm.add("(min-width: 1024px)", () => {
+      const swooshTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top center",
+          markers: false,
+          toggleActions: "play none none reverse",
+        },
+      });
+      const headingSplit = new SplitText(headingRef.current, {
+        type: "words,chars",
+      });
+      const paraSplit = new SplitText(paragraphRef.current, { type: "words" });
+      const labelSplit = new SplitText(labelRef.current, { type: "words" });
+      swooshTl
+        .fromTo(
+          pathRef.current,
+          { drawSVG: "0%", opacity: 0 },
+          { drawSVG: "100%", opacity: 1, duration: 1, ease: "power2.inOut" }
+        )
+        .addLabel("reveal", "-=0.2")
+        .to(pathRef.current, {
+          fillOpacity: 1,
+          duration: 1,
+          ease: "elastic.out(0.5, 0.5)",
+        })
+        .fromTo(
+          shoeRef.current,
+          { y: "-100vh", rotate: -20, scale: 0.8, opacity: 0 },
+          {
+            keyframes: [
+              { opacity: 0, ease: "none", duration: 0 },
+              { opacity: 1, ease: "power2.inOut", duration: 0.8 },
+              { y: 0, rotate: 0, scale: 1, ease: "power1.out" },
+            ],
+          },
+          "reveal"
+        )
+        .from(labelSplit.words, {
+          opacity: 0,
+          y: 20,
+          stagger: 0.05,
+          duration: 0.5,
+          ease: "power3.out",
+        })
+        .from(headingSplit.words, {
+          opacity: 0,
+          y: 40,
+          stagger: 0.04,
+          duration: 0.6,
+          ease: "power3.out",
+        })
+        .from(paraSplit.words, {
+          opacity: 0,
+          y: 20,
+          stagger: 0.03,
+          duration: 0.5,
+          ease: "power2.out",
+        })
+        .fromTo(
+          ButtonRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
+        );
+    });
     return () => mm.revert();
   }, []);
 
@@ -114,7 +227,7 @@ function DiscoverMore() {
         {/* Shoe Image */}
         <Image
           ref={shoeRef}
-          src="/feature.png"
+          src="/feature.webp"
           alt="Nike Air Jordan shoe"
           fill
           priority

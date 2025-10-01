@@ -29,4 +29,6 @@ export type userDetail = {
   stripeCustomerId: string;
   address: AddressForm[] | [];
   favorites: favoriteItem[] | [];
+  twitterUsername: string | null;
+  twitterProfileUrl: string | null;
 };

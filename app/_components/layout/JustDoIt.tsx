@@ -207,7 +207,7 @@ function JustDoIt() {
         {/* Video Background */}
         <video
           ref={videoRef}
-          src="/video/just-do-it.mp4"
+          src="/video/just-do-it.webm"
           className="absolute inset-0 object-cover object-center w-full h-full rounded lg:rounded-3xl"
           muted
           autoPlay

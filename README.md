@@ -8,7 +8,7 @@
 
 ## 🌐 Live Demo
 
-- **Main Website:** [Nike Shoes E-commerce](https://nike-ecommerce.vercel.app/) <!-- replace with your actual link -->
+- **Main Website:** [Nike Shoes E-commerce](https://nike-ecommerce-smoky.vercel.app/) <!-- replace with your actual link -->
 
 ---
 

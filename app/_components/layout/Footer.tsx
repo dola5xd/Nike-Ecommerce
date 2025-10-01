@@ -15,10 +15,9 @@ export default function Footer() {
           <Logo />
         </div>
 
-        {/* Footer Columns */}
         {footerLinks.map((section) => (
           <div key={section.title} className="sm:col-span-1">
-            <h4 className="font-medium mb-3">{section.title}</h4>
+            <p className="font-medium mb-3">{section.title}</p>
             <ul className="space-y-2 text-sm text-gray-400">
               {section.links.map((link) => (
                 <li key={link.label}>

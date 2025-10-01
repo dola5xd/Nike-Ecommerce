@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/_components/ui/Button";
 
-export default function Error({ reset }: { reset: () => void }) {
+export default function Error() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 text-center text-white bg-black">
       <h1 className="mb-4 text-5xl font-bold">Something went wrong</h1>
@@ -11,8 +11,8 @@ export default function Error({ reset }: { reset: () => void }) {
 
       <div className="flex gap-4">
         <Button
-          onClick={() => reset()}
-          className="px-6 py-3 font-bold text-black transition bg-white rounded-xl hover:bg-gray-200"
+          onClick={() => window.location.reload()}
+          className="px-6 py-3 font-bold text-black transition bg-white rounded-xl hover:bg-gray-200 cursor-pointer"
         >
           Try Again
         </Button>

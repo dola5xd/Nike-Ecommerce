@@ -1,6 +1,5 @@
 # Allow all search engines to crawl public pages
 User-agent: *
-Disallow:
 
 # Block private and user-specific pages
 Disallow: /login
@@ -11,5 +10,5 @@ Disallow: /checkout
 Disallow: /account
 Disallow: /order
 
-# Optional: sitemap location (if you generate one)
+# Sitemap location
 Sitemap: https://nike-ecommerce-smoky.vercel.app/sitemap.xml

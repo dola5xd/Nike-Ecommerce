@@ -16,44 +16,37 @@ async function upsertUser(
   account?: { provider?: string; providerAccountId?: string },
   profile?: Record<string, unknown>
 ) {
-  if (!user?.email) return;
-
-  const usersRef = db.collection("users");
-  const snap = await usersRef.where("email", "==", user.email).limit(1).get();
-
   const provider =
     (account?.provider as userDetail["provider"]) ?? "credentials";
   const isOAuth = provider === "google" || provider === "twitter";
+
+  // Use fallback email for X (Twitter) if email is not provided
+  const email = user.email ?? `${account?.providerAccountId}@x.com`;
+  const usersRef = db.collection("users");
+  const snap = await usersRef.where("email", "==", email).limit(1).get();
+
   const emailVerified = isOAuth ? true : false;
 
-  // Extract Twitter-specific fields
   const twitterUsername =
     provider === "twitter" ? ((profile?.username as string) ?? null) : null;
-  const twitterProfileUrl =
-    provider === "twitter" && twitterUsername
-      ? `https://twitter.com/${twitterUsername}`
-      : null;
+  const twitterProfileUrl = twitterUsername
+    ? `https://x.com/${twitterUsername}`
+    : null;
 
   if (!snap.empty) {
-    // Existing user
     const existingDoc = snap.docs[0];
     const userData = existingDoc.data() as userDetail;
 
-    let stripeCustomerId = userData.stripeCustomerId;
-    if (!stripeCustomerId) {
-      const customer = await stripe.customers.create({
-        email: user.email,
-        name: user.name ?? undefined,
-      });
-      stripeCustomerId = customer.id;
-    }
+    const stripeCustomerId =
+      userData.stripeCustomerId ??
+      (await stripe.customers.create({ email, name: user.name })).id;
 
     await usersRef.doc(existingDoc.id).set(
       {
         ...userData,
         id: existingDoc.id,
         name: user.name || userData.name || "",
-        email: user.email,
+        email,
         image: user.image || userData.image || null,
         emailVerified: userData.emailVerified || emailVerified,
         provider,
@@ -68,19 +61,18 @@ async function upsertUser(
       { merge: true }
     );
   } else {
-    // New user
     const newId = String(user.id || account?.providerAccountId || profile?.sub);
     if (!newId || newId === "undefined" || newId === "null") return;
 
-    const customer = await stripe.customers.create({
-      email: user.email,
-      name: user.name ?? undefined,
+    const stripeCustomer = await stripe.customers.create({
+      email,
+      name: user.name,
     });
 
     await usersRef.doc(newId).set({
       id: newId,
       name: user.name || "",
-      email: user.email,
+      email,
       image: user.image || null,
       password: null,
       emailVerified,
@@ -90,24 +82,23 @@ async function upsertUser(
       provider,
       address: [],
       favorites: [],
-      stripeCustomerId: customer.id,
+      stripeCustomerId: stripeCustomer.id,
       twitterUsername,
       twitterProfileUrl,
     });
   }
 }
 
-//  Extend Session type
+// Extend Session type
 declare module "next-auth" {
   interface Session {
     user: userDetail;
   }
 }
 
-//  Auth Options
+// Auth Options
 export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET!,
-
   providers: [
     CredentialsProvider({
       name: "Email & Password",
@@ -135,26 +126,21 @@ export const authOptions: AuthOptions = {
         return { id: doc.id, name: userData.name, email: userData.email };
       },
     }),
-
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID!,
       clientSecret: process.env.TWITTER_CLIENT_SECRET!,
       version: "2.0",
     }),
   ],
-
   pages: {
     signIn: "/login",
     error: "/login",
   },
-
   session: { strategy: "jwt" },
-
   callbacks: {
     async signIn({ user, account, profile }) {
       await upsertUser(
@@ -164,14 +150,10 @@ export const authOptions: AuthOptions = {
       );
       return true;
     },
-
     async jwt({ token, user }) {
-      // If user exists (first login), put verified status in token
-      if (user) {
+      if (user)
         token.emailVerified = (user as userDetail).emailVerified ?? false;
-      }
 
-      // Always refresh from Firestore (keep token in sync)
       if (token.email) {
         const snap = await db
           .collection("users")
@@ -194,7 +176,6 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
@@ -205,8 +186,6 @@ export const authOptions: AuthOptions = {
         session.user.stripeCustomerId = token.stripeCustomerId as string;
         session.user.address = token.address as AddressForm[] | [];
         session.user.favorites = token.favorites as favoriteItem[] | [];
-
-        // Twitter info
         session.user.twitterUsername = token.twitterUsername as string | null;
         session.user.twitterProfileUrl = token.twitterProfileUrl as
           | string

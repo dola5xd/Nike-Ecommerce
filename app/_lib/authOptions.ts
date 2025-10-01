@@ -1,6 +1,5 @@
 import { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import TwitterProvider from "next-auth/providers/twitter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "./firebaseAdmin";
 import { verifyPassword } from "../_utils/saltAndHashPassword";
@@ -9,6 +8,10 @@ import Stripe from "stripe";
 import { AddressForm } from "@/_components/ui/AddressDialog";
 import { favoriteItem } from "@/_types/favorites";
 
+// ============================
+// 🔹 Helper: Upsert into "users" only
+// ============================
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 async function upsertUser(
@@ -16,43 +19,40 @@ async function upsertUser(
   account?: { provider?: string; providerAccountId?: string },
   profile?: Record<string, unknown>
 ) {
+  if (!user?.email) return;
+
+  const usersRef = db.collection("users");
+  const snap = await usersRef.where("email", "==", user.email).limit(1).get();
+
   const provider =
     (account?.provider as userDetail["provider"]) ?? "credentials";
   const isOAuth = provider === "google" || provider === "twitter";
-
-  // Use fallback email for X (Twitter) if email is not provided
-  const email = user.email ?? `${account?.providerAccountId}@x.com`;
-  const usersRef = db.collection("users");
-  const snap = await usersRef.where("email", "==", email).limit(1).get();
-
   const emailVerified = isOAuth ? true : false;
 
-  const twitterUsername =
-    provider === "twitter" ? ((profile?.username as string) ?? null) : null;
-  const twitterProfileUrl = twitterUsername
-    ? `https://x.com/${twitterUsername}`
-    : null;
-
   if (!snap.empty) {
+    // 🔹 Existing user
     const existingDoc = snap.docs[0];
     const userData = existingDoc.data() as userDetail;
 
-    const stripeCustomerId =
-      userData.stripeCustomerId ??
-      (await stripe.customers.create({ email, name: user.name })).id;
+    // ✅ Ensure Stripe ID exists
+    let stripeCustomerId = userData.stripeCustomerId;
+    if (!stripeCustomerId) {
+      const customer = await stripe.customers.create({
+        email: user.email,
+        name: user.name ?? undefined,
+      });
+      stripeCustomerId = customer.id;
+    }
 
     await usersRef.doc(existingDoc.id).set(
       {
         ...userData,
         id: existingDoc.id,
         name: user.name || userData.name || "",
-        email,
+        email: user.email,
         image: user.image || userData.image || null,
         emailVerified: userData.emailVerified || emailVerified,
         provider,
-        twitterUsername: twitterUsername || userData.twitterUsername || null,
-        twitterProfileUrl:
-          twitterProfileUrl || userData.twitterProfileUrl || null,
         updatedAt: Date.now(),
         address: userData.address || [],
         favorites: userData.favorites || [],
@@ -61,18 +61,20 @@ async function upsertUser(
       { merge: true }
     );
   } else {
+    // 🔹 New user
     const newId = String(user.id || account?.providerAccountId || profile?.sub);
     if (!newId || newId === "undefined" || newId === "null") return;
 
-    const stripeCustomer = await stripe.customers.create({
-      email,
-      name: user.name,
+    // ✅ Create Stripe customer
+    const customer = await stripe.customers.create({
+      email: user.email,
+      name: user.name ?? undefined,
     });
 
     await usersRef.doc(newId).set({
       id: newId,
       name: user.name || "",
-      email,
+      email: user.email,
       image: user.image || null,
       password: null,
       emailVerified,
@@ -82,23 +84,26 @@ async function upsertUser(
       provider,
       address: [],
       favorites: [],
-      stripeCustomerId: stripeCustomer.id,
-      twitterUsername,
-      twitterProfileUrl,
+      stripeCustomerId: customer.id,
     });
   }
 }
 
-// Extend Session type
+// ============================
+// 🔹 Extend Session type
+// ============================
 declare module "next-auth" {
   interface Session {
     user: userDetail;
   }
 }
 
-// Auth Options
+// ============================
+// 🔹 Auth Options
+// ============================
 export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET!,
+
   providers: [
     CredentialsProvider({
       name: "Email & Password",
@@ -126,21 +131,20 @@ export const authOptions: AuthOptions = {
         return { id: doc.id, name: userData.name, email: userData.email };
       },
     }),
+
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    TwitterProvider({
-      clientId: process.env.TWITTER_CLIENT_ID!,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
-      version: "2.0",
-    }),
   ],
+
   pages: {
     signIn: "/login",
     error: "/login",
   },
+
   session: { strategy: "jwt" },
+
   callbacks: {
     async signIn({ user, account, profile }) {
       await upsertUser(
@@ -150,10 +154,14 @@ export const authOptions: AuthOptions = {
       );
       return true;
     },
-    async jwt({ token, user }) {
-      if (user)
-        token.emailVerified = (user as userDetail).emailVerified ?? false;
 
+    async jwt({ token, user }) {
+      // If user exists (first login), put verified status in token
+      if (user) {
+        token.emailVerified = (user as userDetail).emailVerified ?? false;
+      }
+
+      // Always refresh from Firestore (keep token in sync)
       if (token.email) {
         const snap = await db
           .collection("users")
@@ -170,12 +178,11 @@ export const authOptions: AuthOptions = {
           token.stripeCustomerId = userData.stripeCustomerId ?? null;
           token.address = userData.address ?? null;
           token.favorites = userData.favorites ?? null;
-          token.twitterUsername = userData.twitterUsername ?? null;
-          token.twitterProfileUrl = userData.twitterProfileUrl ?? null;
         }
       }
       return token;
     },
+
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
@@ -186,10 +193,6 @@ export const authOptions: AuthOptions = {
         session.user.stripeCustomerId = token.stripeCustomerId as string;
         session.user.address = token.address as AddressForm[] | [];
         session.user.favorites = token.favorites as favoriteItem[] | [];
-        session.user.twitterUsername = token.twitterUsername as string | null;
-        session.user.twitterProfileUrl = token.twitterProfileUrl as
-          | string
-          | null;
       }
       return session;
     },

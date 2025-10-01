@@ -3,7 +3,6 @@
 import { signIn } from "next-auth/react";
 import clsx from "clsx";
 import { FiChrome } from "react-icons/fi";
-import { RiTwitterXLine } from "react-icons/ri";
 
 const baseClass =
   "py-3 px-3 lg:px-6 lg:py-3.5 flex items-center justify-center font-medium duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 gap-x-2 outline-1 w-full rounded-md text-body-medium hover:scale-105";
@@ -24,16 +23,6 @@ function SignButtons({ variant = "light" }: { variant?: "dark" | "light" }) {
       >
         <FiChrome size={20} />
         Continue with Google
-      </button>
-
-      {/* Twitter login */}
-      <button
-        type="button"
-        onClick={() => signIn("twitter")}
-        className={clsx(baseClass, classColors)}
-      >
-        <RiTwitterXLine size={20} />
-        Continue with X
       </button>
     </>
   );

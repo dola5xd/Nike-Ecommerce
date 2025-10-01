@@ -26,7 +26,7 @@ function ProductCard({ product }: { product: Product }) {
         <span
           role="status"
           aria-label={`Product badge: ${product.badge.label}`}
-          className={`inline-flex items-center justify-center rounded-full px-3 py-1.5 text-body-medium w-fit h-fit ${badgeStyles[product.badge.tone] || badgeStyles.default}`}
+          className={`absolute z-10 top-3 left-3 rounded-full px-3 py-1.5 w-fit h-fit text-body-medium ${badgeStyles[product.badge.tone] || badgeStyles.default}`}
         >
           {product.badge.label}
         </span>

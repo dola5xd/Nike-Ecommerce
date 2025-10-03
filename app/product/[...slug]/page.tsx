@@ -8,13 +8,15 @@ import { ProductDetail } from "@/_types/product";
 import { getServerSession } from "next-auth";
 import type { Metadata } from "next";
 import { urlFor } from "@/_utils/utils";
+import { notFound } from "next/navigation";
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = await getProductByName(params.slug);
+  const slug = (await params).slug.at(0)!;
+  const product: ProductDetail | null = await getProductByName(slug);
 
   if (!product) {
     return {
@@ -35,12 +37,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${title} | Nike E-commerce`,
     description: description || `Buy ${title} from Nike online store.`,
     alternates: {
-      canonical: `https://nike-ecommerce-smoky.vercel.app/products/${params.slug}`,
+      canonical: `https://nike-ecommerce-smoky.vercel.app/products/${slug}`,
     },
     openGraph: {
       title: `${title} | Nike E-commerce`,
       description: description || `Buy ${title} from Nike online store.`,
-      url: `https://nike-ecommerce-smoky.vercel.app/products/${params.slug}`,
+      url: `https://nike-ecommerce-smoky.vercel.app/products/${slug}`,
       siteName: "Nike E-commerce",
       type: "website",
       images: imageUrls.length
@@ -61,9 +63,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-async function page({ params }: { params: Promise<{ slug: string }> }) {
+async function page({ params }: Props) {
   const slug = (await params).slug.at(0)!;
-  const product: ProductDetail = await getProductByName(slug);
+  const product: ProductDetail | null = await getProductByName(slug);
+  if (!product) notFound();
+
   const { title, images, description, gender, _id } = product;
 
   const session = await getServerSession(authOptions);

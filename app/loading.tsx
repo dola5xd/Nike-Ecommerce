@@ -4,9 +4,8 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import DrawSVGPlugin from "gsap/DrawSVGPlugin";
-import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(DrawSVGPlugin, SplitText);
+gsap.registerPlugin(DrawSVGPlugin);
 
 export default function NikeLoading() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -16,11 +15,15 @@ export default function NikeLoading() {
   useGSAP(() => {
     if (!containerRef.current || !pathRef.current || !textRef.current) return;
 
-    const split = new SplitText(textRef.current, { type: "words" });
+    // Wrap each letter of the text in a span for stagger animation
+    const chars = textRef.current.innerText.split("");
+    textRef.current.innerHTML = chars
+      .map((c) => `<span class="inline-block opacity-0">${c}</span>`)
+      .join("");
 
-    const tl = gsap.timeline({
-      defaults: { ease: "power2.out" },
-    });
+    const charSpans = textRef.current.querySelectorAll("span");
+
+    const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
     // Path animation
     tl.fromTo(
@@ -30,11 +33,17 @@ export default function NikeLoading() {
     )
       .to(pathRef.current, { fill: "#fff", duration: 0.5 }, "-=0.2")
 
-      // Text animation
+      // Text animation (stagger letters)
       .fromTo(
-        split.words,
+        charSpans,
         { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, stagger: 0.15, duration: 0.8, ease: "power3.out" },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.08,
+          duration: 0.6,
+          ease: "power3.out",
+        },
         "-=0.4"
       );
   }, []);

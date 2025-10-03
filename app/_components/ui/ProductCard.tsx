@@ -47,6 +47,7 @@ function ProductCard({ product }: { product: Product }) {
           src={imageSrc!}
           alt={product.title}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover object-center rounded"
         />
       </div>

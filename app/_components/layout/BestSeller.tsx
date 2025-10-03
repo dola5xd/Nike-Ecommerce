@@ -19,12 +19,12 @@ async function BestSeller() {
         ))}
       </div>
       <Link
-        href={"/products"}
-        aria-label="See more products"
+        href="/products"
+        aria-label="See more Nike products"
         className="self-center"
       >
-        <Button variant="dark" size="lg" aria-label="See more products">
-          See More <MdArrowOutward size={20} />
+        <Button variant="dark" size="lg">
+          See More Products <MdArrowOutward size={20} />
         </Button>
       </Link>
     </section>

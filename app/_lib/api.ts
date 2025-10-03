@@ -11,11 +11,12 @@ import { ProductCart } from "@/_types/product";
 export const getProductByName = async (slug: string) => {
   try {
     // 1) convert slug into title
+    console.log(slug);
     const title = slug.replaceAll("-", " ");
 
     // 2) get product
     const product = await client.fetch(productQuery, { title });
-
+    if (!product) return null;
     return product.at(0) as ProductDetail;
   } catch (err) {
     const errorMessage =

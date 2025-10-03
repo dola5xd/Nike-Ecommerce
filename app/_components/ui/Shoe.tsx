@@ -105,8 +105,8 @@ function Shoe() {
     <div
       ref={scrollWrapRef}
       className="
-        relative z-20 mx-auto pointer-events-none 
-        w-[90%] sm:w-[80%] lg:max-w-[50%]
+        relative mx-auto pointer-events-none 
+        w-[90%] sm:w-[80%] lg:max-w-[50%] lg:scale-70
       "
     >
       <div ref={floatRef} className="relative w-full">
@@ -116,6 +116,8 @@ function Shoe() {
             alt="Nike Air Jordan shoe"
             fill
             priority
+            fetchPriority="high"
+            loading="eager"
             sizes="(max-width: 640px) 90vw, (max-width: 1024px) 70vw, 70vw"
             className="object-contain select-none drop-shadow-xl"
             onLoad={() => ScrollTrigger.refresh()}

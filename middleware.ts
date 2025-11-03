@@ -21,7 +21,7 @@ export default withAuth(
         return NextResponse.redirect(new URL("/", req.url));
       }
       // auto redirect to defualt page of account
-      if (nextUrl.pathname.startsWith("/account") && token.emailVerified) {
+      if (nextUrl.pathname.startsWith("/account")) {
         return NextResponse.redirect(new URL("/account/orders", req.url));
       }
     } else {
